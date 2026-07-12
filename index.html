@@ -11,12 +11,11 @@
 
     <style>
         :root {
-            /* Permanent Dark Theme Base Color Profile */
             --dynamic-pink: #2C0B18;
             --dark-pink: #FF69B4;
             --pastel-blue: #0A141D;
             --deep-blue: #111A24;
-            --museum-gold: #D4AF37; /* Metallic Gold */
+            --museum-gold: #D4AF37;
             --text-main: #FFF0F5;
             --text-sub: #A59497;
             --card-bg: rgba(30, 20, 25, 0.85);
@@ -39,9 +38,6 @@
             background-color: var(--pastel-blue);
         }
 
-        /* ---------------------------------------------------- */
-        /* Deep Liquid Wave Animation System                    */
-        /* ---------------------------------------------------- */
         body {
             background: linear-gradient(135deg, var(--dynamic-pink), var(--pastel-blue));
             position: relative;
@@ -83,9 +79,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* ---------------------------------------------------- */
-        /* Mobile Portrait Enforcement Filter                   */
-        /* ---------------------------------------------------- */
         #landscape-warning {
             position: fixed;
             top: 0;
@@ -114,9 +107,6 @@
             #gallery-container { display: block; }
         }
 
-        /* ---------------------------------------------------- */
-        /* Gallery Container & Layout Engines                   */
-        /* ---------------------------------------------------- */
         #gallery-container {
             width: 100vw;
             height: 100vh;
@@ -137,12 +127,10 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 0 25px;
+            padding: 0;
             position: relative;
         }
 
-        /* Welcome Page Frame Layout */
-        .welcome-slide { justify-content: center; }
         .welcome-card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -152,18 +140,18 @@
             border-radius: 40px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             text-align: center;
-            width: 100%;
+            width: calc(100% - 50px);
             max-width: 340px;
         }
         .welcome-top { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 4px; color: var(--dark-pink); margin: 0 0 10px 0; font-weight: 700; }
         .welcome-title { font-family: 'Playfair Display', serif; font-size: 2.6rem; margin: 0 0 20px 0; line-height: 1.2; font-weight: 600; }
         .welcome-sub { font-size: 0.95rem; color: var(--text-sub); font-style: italic; border-top: 1px dashed rgba(255, 105, 180, 0.3); padding-top: 15px; margin: 0; }
-        .scroll-indicator { position: absolute; bottom: 45px; font-size: 0.9rem; font-weight: bold; color: var(--dark-pink); animation: arrowBounce 2s infinite; }
+        .scroll-indicator { position: absolute; bottom: 45px; font-size: 0.9rem; font-weight: bold; color: var(--dark-pink); animation: arrowBounce 2s infinite; text-align: center; width: 100%; }
 
         @keyframes arrowBounce { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(6px); opacity: 1; } }
 
         /* ---------------------------------------------------- */
-        /* Dynamic Exhibition Views & Perfect Center Framing    */
+        /* View Port Modes & Center Configurations              */
         /* ---------------------------------------------------- */
         .view-container {
             display: flex;
@@ -172,32 +160,32 @@
             justify-content: center;
             width: 100%;
             height: 100%;
-            padding-bottom: 60px; /* Counter-balances control bar position for centering */
+            padding: 40px 25px;
         }
 
         .museum-title {
             font-family: 'Fredoka', sans-serif;
             font-size: 1.9rem;
             color: var(--text-main);
-            margin: 0;
+            margin: 0 0 25px 0;
             text-align: center;
             font-weight: 600;
+            width: 100%;
         }
 
-        /* Standard Frame Layout constraints */
         .museum-frame {
-            margin-top: 40px;
-            margin-bottom: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
-            width: auto;
-            height: auto;
+            width: 100%;
+            flex: 1;
+            margin: 0 0 25px 0;
+            min-height: 0;
         }
 
         .museum-frame img {
-            max-width: 82vw;
-            max-height: 48vh;
+            max-width: 100%;
+            max-height: 100%;
             width: auto;
             height: auto;
             display: block;
@@ -205,46 +193,62 @@
             border-radius: 14px;
             box-shadow: 0 16px 38px rgba(0, 0, 0, 0.6);
             object-fit: contain;
-            transition: transform 0.3s ease;
         }
 
-        /* Flipped 90-Degree Landscape Force Layout */
-        .museum-slide.landscape-art .museum-frame {
-            /* Swaps bounds container sizes to avoid text overlapping */
-            min-height: 52vh; 
-            width: 82vw;
-        }
-
-        .museum-slide.landscape-art .museum-frame img {
-            /* Rotates image and maps height directly to the screen length width rules */
-            transform: rotate(90deg);
-            max-width: 46vh !important;
-            max-height: 82vw !important;
-            object-fit: contain;
-        }
-
-        /* Clean Grey Subtitle Metric */
         .museum-desc {
             font-size: 0.95rem;
             color: var(--text-sub);
             text-align: center;
-            margin: 0;
+            margin: 0 0 35px 0;
             max-width: 85%;
             line-height: 1.4;
             font-weight: 400;
         }
 
-        /* ---------------------------------------------------- */
-        /* Action Utility System Controls                       */
-        /* ---------------------------------------------------- */
         .slide-controls {
-            position: absolute;
-            bottom: 45px;
             display: flex;
             gap: 14px;
-            z-index: 10;
+            justify-content: center;
+            width: 100%;
         }
 
+        /* ---------------------------------------------------- */
+        /* Widescreen Physical Landscape Filter Overrides       */
+        /* ---------------------------------------------------- */
+        .museum-slide.landscape-art .view-container {
+            transform: rotate(90deg);
+            transform-origin: center center;
+            width: 100vh;
+            height: 100vw;
+            position: absolute;
+            top: calc(50% - 50vw);
+            left: calc(50% - 50vh);
+            padding: 30px 40px;
+        }
+
+        .museum-slide.landscape-art .museum-title {
+            margin: 0 0 15px 0;
+        }
+
+        .museum-slide.landscape-art .museum-frame {
+            width: 100%;
+            height: 100%;
+            margin: 0 0 15px 0;
+        }
+
+        .museum-slide.landscape-art .museum-frame img {
+            max-width: 100% !important;
+            max-height: 100% !important;
+            width: auto;
+            height: auto;
+        }
+
+        .museum-slide.landscape-art .museum-desc {
+            margin: 0 0 20px 0;
+            max-width: 90%;
+        }
+
+        /* Buttons and Form controls */
         .action-btn {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -268,9 +272,6 @@
             border-color: rgba(255, 105, 180, 0.5);
         }
 
-        /* ---------------------------------------------------- */
-        /* Editor Container Infrastructure                      */
-        /* ---------------------------------------------------- */
         .edit-container {
             display: flex;
             flex-direction: column;
@@ -279,6 +280,7 @@
             width: 100%;
             height: 100%;
             z-index: 15;
+            padding: 0 25px;
         }
 
         .curator-card {
@@ -436,7 +438,6 @@
         const container = document.getElementById('gallery-container');
         const addSlide = document.getElementById('add-slide');
 
-        // Automatic Fluid Color Gradient Transition Engine On Scroll
         container.addEventListener('scroll', () => {
             const maxScroll = container.scrollHeight - container.clientHeight;
             if (maxScroll <= 0) return;
@@ -447,14 +448,12 @@
             document.documentElement.style.setProperty('--dynamic-pink', `hsl(${darkHue}, 60%, 13%)`);
         });
 
-        // Basic File Picker Indicator Feedback
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
                 fileLabel.textContent = "Photo Loaded";
             }
         });
 
-        // Main Exhibit Creation Function
         addBtn.addEventListener('click', () => {
             const file = fileInput.files[0];
             const title = titleInput.value.trim();
@@ -511,7 +510,6 @@
                 
                 container.insertBefore(newSlide, addSlide);
                 
-                // Clear baseline controller values cleanly
                 fileInput.value = '';
                 titleInput.value = '';
                 descInput.value = '';
@@ -523,9 +521,6 @@
             reader.readAsDataURL(file);
         });
 
-        /* ---------------------------------------------------- */
-        /* Dynamic Slide Editor Automation Engines              */
-        /* ---------------------------------------------------- */
         function openEditor(btn) {
             const slide = btn.closest('.slide');
             slide.querySelector('.view-container').style.display = 'none';
@@ -564,18 +559,15 @@
             
             if (!newTitle) { alert('Title cannot be empty'); return; }
 
-            // Commit plain texts
             slide.querySelector('.museum-title').textContent = newTitle;
             slide.querySelector('.museum-desc').textContent = newDesc;
 
-            // Commit layout structure class updates
             if (checkLandscape) {
                 slide.classList.add('landscape-art');
             } else {
                 slide.classList.remove('landscape-art');
             }
 
-            // Address Image Modification Requests
             const pendingImg = slide.getAttribute('data-pending-img');
             const frame = slide.querySelector('.museum-frame');
             const imgElement = slide.querySelector('.exhibit-image');
