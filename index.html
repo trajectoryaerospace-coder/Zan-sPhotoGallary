@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zanieke's Portrait Art Museum</title>
+    <title>Zanieke's Fluid Art Museum</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,18 +11,34 @@
 
     <style>
         :root {
-            --primary-pink: #FFB7CE;
+            /* Theme Config Base */
+            --dynamic-pink: #FFB7CE;
             --dark-pink: #FF69B4;
-            --pastel-rose: #FFD1DC;
-            --soft-glow: #FFF0F5;
+            --pastel-blue: #BDF0FF;
+            --deep-blue: #70A1FF;
             --museum-gold: #E6C280;
             --text-main: #3D2E31;
             --text-sub: #7A686B;
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --frame-bg: #FFFFFF;
+        }
+
+        /* Dark Mode Variable Overrides */
+        body.dark-mode {
+            --dynamic-pink: #4A1525;
+            --dark-pink: #FF69B4;
+            --pastel-blue: #1A2634;
+            --deep-blue: #1E375A;
+            --text-main: #FFF0F5;
+            --text-sub: #D1C4C6;
+            --card-bg: rgba(20, 15, 20, 0.75);
+            --frame-bg: #1A1617;
         }
 
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
         }
 
         html, body {
@@ -36,37 +52,83 @@
         }
 
         /* ---------------------------------------------------- */
-        /* Moving Pastel Gradient & Sparkle Background Layout   */
+        /* Animated Fluid Water/Wave Canvas Background         */
         /* ---------------------------------------------------- */
         body {
-            background: linear-gradient(-45deg, #FFB7CE, #FFD1DC, #FFE4E1, #FFF0F5);
-            background-size: 400% 400%;
-            animation: elegantGradient 16s ease infinite;
+            background: linear-gradient(135deg, var(--dynamic-pink), var(--pastel-blue));
             position: relative;
         }
 
-        /* Ambient floating sparkle elements */
-        body::before, body::after {
-            content: "✨";
+        /* Dynamic Liquid/Water Waves Layer */
+        .water-bg {
             position: absolute;
-            font-size: 1.5rem;
-            opacity: 0.3;
-            animation: floatSparkle 8s infinite ease-in-out;
-            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
             z-index: 1;
-        }
-        body::before { top: 15%; left: 10%; animation-delay: 0s; }
-        body::after { bottom: 20%; right: 12%; animation-delay: 4s; }
-
-        @keyframes elegantGradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            overflow: hidden;
+            pointer-events: none;
+            opacity: 0.6;
         }
 
-        @keyframes floatSparkle {
-            0%, 100% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0.2; }
-            50% { transform: translateY(-30px) scale(1.2) rotate(45deg); opacity: 0.6; }
+        .wave {
+            position: absolute;
+            width: 200vw;
+            height: 200vw;
+            top: -120vw;
+            left: -50vw;
+            background: linear-gradient(45deg, rgba(255, 183, 206, 0.4), rgba(189, 240, 255, 0.4));
+            border-radius: 43% 40% 45% 40%;
+            animation: drift 14s infinite linear;
+        }
+
+        .wave:nth-child(2) {
+            top: -115vw;
+            background: linear-gradient(135deg, rgba(255, 105, 180, 0.2), rgba(112, 161, 255, 0.2));
+            border-radius: 40% 45% 40% 43%;
+            animation: drift 9s infinite linear;
+        }
+
+        @keyframes drift {
+            from { transform: rotate(0deg); }
+            from { transform: rotate(360deg); }
+        }
+
+        /* ---------------------------------------------------- */
+        /* Sticky Floating Museum Controls Control Bar          */
+        /* ---------------------------------------------------- */
+        #museum-controls {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 10000;
+        }
+
+        .control-btn {
+            background: var(--card-bg);
+            border: 2px solid white;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:active {
+            transform: scale(0.9);
+        }
+
+        .control-btn.active {
+            background: var(--dark-pink);
+            border-color: var(--dark-pink);
         }
 
         /* ---------------------------------------------------- */
@@ -78,7 +140,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(135deg, var(--pastel-rose), var(--soft-glow));
+            background: linear-gradient(135deg, #FFB7CE, #BDF0FF);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -88,29 +150,14 @@
             padding: 30px;
         }
 
-        #landscape-warning .icon {
-            font-size: 4.5rem;
-            animation: spinDevice 2.5s infinite ease-in-out;
-        }
-
-        #landscape-warning h2 {
-            font-family: 'Fredoka', sans-serif;
-            color: var(--dark-pink);
-            font-size: 2.2rem;
-            margin: 15px 0 10px 0;
-        }
-
-        #landscape-warning p {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--text-sub);
-        }
+        #landscape-warning .icon { font-size: 4.5rem; animation: spinDevice 2.5s infinite ease-in-out; }
+        #landscape-warning h2 { font-family: 'Fredoka', sans-serif; color: #FF69B4; font-size: 2.2rem; margin: 15px 0 10px 0; }
+        #landscape-warning p { font-size: 1.1rem; font-weight: bold; color: #4A373A; }
 
         @media (orientation: landscape) {
             #landscape-warning { display: flex; }
             #gallery-container { display: none; }
         }
-
         @media (orientation: portrait) {
             #landscape-warning { display: none; }
             #gallery-container { display: block; }
@@ -144,20 +191,17 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            padding: 40px 25px;
+            padding: 60px 25px 40px 25px;
             position: relative;
+            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 100%);
         }
 
         /* ---------------------------------------------------- */
         /* Slide 1: Fine Art Welcome Page                       */
         /* ---------------------------------------------------- */
-        .welcome-slide {
-            justify-content: center;
-            gap: 15px;
-        }
-
+        .welcome-slide { justify-content: center; gap: 15px; }
         .welcome-card {
-            background: rgba(255, 255, 255, 0.75);
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 2px solid white;
@@ -167,80 +211,26 @@
             text-align: center;
             width: 100%;
             max-width: 340px;
-            animation: cardFloat 4s infinite ease-in-out;
         }
+        .welcome-top { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 4px; color: var(--dark-pink); margin: 0 0 10px 0; font-weight: 700; }
+        .welcome-title { font-family: 'Playfair Display', serif; font-size: 2.6rem; margin: 0 0 20px 0; line-height: 1.2; font-weight: 600; }
+        .welcome-sub { font-size: 0.95rem; color: var(--text-sub); font-style: italic; border-top: 1px dashed var(--dark-pink); padding-top: 15px; margin: 0; }
+        .scroll-indicator { position: absolute; bottom: 30px; font-size: 0.9rem; font-weight: bold; color: var(--dark-pink); animation: arrowBounce 2s infinite; }
 
-        .welcome-top {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: var(--dark-pink);
-            margin: 0 0 10px 0;
-            font-weight: 700;
-        }
-
-        .welcome-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.6rem;
-            color: var(--text-main);
-            margin: 0 0 20px 0;
-            line-height: 1.2;
-            font-weight: 600;
-        }
-
-        .welcome-sub {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 0.95rem;
-            color: var(--text-sub);
-            font-style: italic;
-            border-top: 1px dashed var(--primary-pink);
-            padding-top: 15px;
-            margin: 0;
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 30px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: var(--dark-pink);
-            letter-spacing: 1px;
-            animation: arrowBounce 2s infinite;
-        }
-
-        @keyframes cardFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        @keyframes arrowBounce {
-            0%, 100% { transform: translateY(0); opacity: 0.6; }
-            50% { transform: translateY(6px); opacity: 1; }
-        }
+        @keyframes arrowBounce { 0%, 100% { transform: translateY(0); opacity: 0.6; } 50% { transform: translateY(6px); opacity: 1; } }
 
         /* ---------------------------------------------------- */
         /* Dynamic Exhibition Slides (Museum Layout)            */
         /* ---------------------------------------------------- */
-        .museum-slide {
-            background: transparent;
-        }
-
-        .museum-header {
-            width: 100%;
-            text-align: center;
-        }
-
         .museum-title {
             font-family: 'Fredoka', sans-serif;
             font-size: 1.8rem;
-            color: white;
+            color: var(--text-main);
             margin: 0;
-            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.4);
-            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 4px rgba(255, 255, 255, 0.5);
+            text-align: center;
         }
 
-        /* The Premium Museum Picture Frame */
         .museum-frame {
             width: 100%;
             flex: 1;
@@ -248,96 +238,88 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: white;
+            background: var(--frame-bg);
             padding: 16px;
             border-radius: 24px;
             box-shadow: 0 16px 35px rgba(0, 0, 0, 0.12);
             border: 8px solid var(--museum-gold);
             position: relative;
-            overflow: hidden;
         }
 
         .museum-frame img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Perfect preservation of image aspect ratio */
+            object-fit: contain;
             border-radius: 8px;
         }
 
-        /* Classic Wall Museum Placard Label */
+        /* Absolute Remove Button Asset */
+        .remove-btn {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            background: #FF4757;
+            color: white;
+            border: 2px solid white;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+            cursor: pointer;
+            z-index: 10;
+        }
+
         .museum-placard {
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border-left: 4px solid var(--dark-pink);
             padding: 12px 20px;
             border-radius: 4px 16px 16px 4px;
-            width: 90%;
+            width: 95%;
             box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            text-align: left;
         }
 
-        .museum-desc {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 1rem;
-            color: var(--text-main);
-            margin: 0;
-            line-height: 1.4;
-            font-weight: 500;
-        }
+        .museum-desc { font-size: 1rem; margin: 0; line-height: 1.4; font-weight: 500; }
 
         /* ---------------------------------------------------- */
-        /* Persistent Art Creator Slide Layout                  */
+        /* Art Creator Slide Layout                             */
         /* ---------------------------------------------------- */
-        .add-slide {
-            justify-content: center;
-        }
-
+        .add-slide { justify-content: center; }
         .curator-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             padding: 30px 24px;
             border-radius: 36px;
-            box-shadow: 0 20px 45px rgba(255, 182, 193, 0.4);
+            box-shadow: 0 20px 45px rgba(255, 182, 193, 0.3);
             width: 100%;
             max-width: 340px;
             display: flex;
             flex-direction: column;
             gap: 14px;
             align-items: center;
-            border: 3px dashed var(--primary-pink);
+            border: 3px dashed var(--dark-pink);
         }
-
-        .curator-card h2 {
-            color: var(--dark-pink);
-            margin: 0 0 5px 0;
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1.6rem;
-            text-align: center;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
+        .curator-card h2 { color: var(--dark-pink); margin: 0; font-family: 'Fredoka', sans-serif; font-size: 1.6rem; }
+        input[type="file"] { display: none; }
+        
         .file-trigger {
             display: block;
             width: 100%;
             text-align: center;
             padding: 12px;
             cursor: pointer;
-            background: white;
+            background: var(--frame-bg);
             color: var(--dark-pink);
-            border: 2px solid var(--primary-pink);
+            border: 2px solid var(--dark-pink);
             border-radius: 18px;
             font-weight: 700;
-            transition: all 0.2s ease;
             font-size: 0.95rem;
-            box-shadow: 0 4px 10px rgba(255, 182, 193, 0.2);
-        }
-
-        .file-trigger:active {
-            transform: scale(0.98);
-            background: var(--soft-glow);
         }
 
         .museum-input {
@@ -348,19 +330,12 @@
             font-family: 'Quicksand', sans-serif;
             font-size: 0.95rem;
             outline: none;
-            background: white;
+            background: var(--frame-bg);
             color: var(--text-main);
-            transition: border-color 0.3s;
         }
-
-        .museum-input:focus {
-            border-color: var(--dark-pink);
-        }
-
-        textarea.museum-input {
-            resize: none;
-        }
-
+        .museum-input:focus { border-color: var(--dark-pink); }
+        textarea.museum-input { resize: none; }
+        
         .hang-btn {
             background: linear-gradient(135deg, var(--dark-pink), #FF85A2);
             color: white;
@@ -371,20 +346,22 @@
             font-family: 'Fredoka', sans-serif;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
-            transition: all 0.2s;
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.3);
             width: 100%;
-            margin-top: 5px;
-            letter-spacing: 0.5px;
-        }
-
-        .hang-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 3px 10px rgba(255, 105, 180, 0.2);
         }
     </style>
 </head>
 <body>
+
+    <div class="water-bg">
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <div id="museum-controls">
+        <button id="theme-toggle" class="control-btn" title="Toggle Scroll Theme Shift">🔄</button>
+        <button id="dark-toggle" class="control-btn" title="Toggle Dark Mode">🌙</button>
+    </div>
 
     <div id="landscape-warning">
         <div class="icon">📱✨</div>
@@ -407,9 +384,7 @@
             <div class="curator-card">
                 <h2>Exhibit a Masterpiece 🎨</h2>
                 
-                <label id="file-label" for="file-input" class="file-trigger">
-                    Select Art Photo 📸
-                </label>
+                <label id="file-label" for="file-input" class="file-trigger">Select Art Photo 📸</label>
                 <input type="file" id="file-input" accept="image/*">
                 
                 <input type="text" id="title-input" class="museum-input" placeholder="Name of your masterpiece..." autocomplete="off">
@@ -430,43 +405,75 @@
         const addBtn = document.getElementById('add-btn');
         const container = document.getElementById('gallery-container');
         const addSlide = document.getElementById('add-slide');
+        
+        // System Feature Switches
+        const darkToggle = document.getElementById('dark-toggle');
+        const themeToggle = document.getElementById('theme-toggle');
+        let dynamicThemeActive = false;
 
-        // Dynamic State UI updates for files
+        // Dark Mode Logic Implementation
+        darkToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            darkToggle.classList.toggle('active');
+            darkToggle.textContent = document.body.classList.contains('dark-mode') ? "☀️" : "🌙";
+        });
+
+        // Toggle configuration state tracker for dynamically tracking scrolls
+        themeToggle.addEventListener('click', () => {
+            dynamicThemeActive = !dynamicThemeActive;
+            themeToggle.classList.toggle('active', dynamicThemeActive);
+            if(!dynamicThemeActive) {
+                // Return baseline root value configuration back cleanly
+                document.documentElement.style.setProperty('--dynamic-pink', document.body.classList.contains('dark-mode') ? '#4A1525' : '#FFB7CE');
+            }
+        });
+
+        // Tracking scroll event frames to safely cycle background tone hues manually
+        container.addEventListener('scroll', () => {
+            if (!dynamicThemeActive) return;
+            
+            const maxScroll = container.scrollHeight - container.clientHeight;
+            if (maxScroll <= 0) return;
+            
+            const scrollPercent = container.scrollTop / maxScroll;
+            
+            // Map color shifts smoothly through different pink coordinates based on operational mode
+            if (document.body.classList.contains('dark-mode')) {
+                const darkHue = Math.floor(300 + (scrollPercent * 50)); // Cycles through custom deeper pink spectrum bounds
+                document.documentElement.style.setProperty('--dynamic-pink', `hsl(${darkHue}, 55%, 15%)`);
+            } else {
+                const lightHue = Math.floor(320 + (scrollPercent * 40)); // Cycles through ultra vibrant sweet pinks
+                document.documentElement.style.setProperty('--dynamic-pink', `hsl(${lightHue}, 100%, 88%)`);
+            }
+        });
+
+        // Update file picker text cleanly 
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
                 fileLabel.textContent = "Photo Ready! 💖";
-                fileLabel.style.background = "var(--soft-glow)";
                 fileLabel.style.borderColor = "var(--dark-pink)";
             }
         });
 
-        // Safe frame parsing & generation pipeline
+        // Build dynamically insertable museum exhibit pieces
         addBtn.addEventListener('click', () => {
             const file = fileInput.files[0];
             const title = titleInput.value.trim();
             const desc = descInput.value.trim();
             
-            if (!file) {
-                alert('Please pick a stunning photograph to exhibit! 📸');
-                return;
-            }
-            if (!title) {
-                alert('Every great masterpiece needs a title! 🏷️');
-                return;
-            }
+            if (!file) { alert('Please pick a stunning photograph to exhibit! 📸'); return; }
+            if (!title) { alert('Every great masterpiece needs a title! 🏷️'); return; }
             
             const reader = new FileReader();
             reader.onload = function(e) {
                 const imageUrl = e.target.result;
                 
-                // Construct Portrait Exhibition Elements
                 const newSlide = document.createElement('div');
-                newSlide.className = 'slide museum-slide';
+                newSlide.className = 'slide';
                 newSlide.innerHTML = `
-                    <div class="museum-header">
-                        <h2 class="museum-title">${escapeHTML(title)}</h2>
-                    </div>
+                    <h2 class="museum-title">${escapeHTML(title)}</h2>
                     <div class="museum-frame">
+                        <button class="remove-btn" onclick="removeMasterpiece(this)">❌</button>
                         <img src="${imageUrl}" alt="${escapeHTML(title)}">
                     </div>
                     <div class="museum-placard">
@@ -474,22 +481,31 @@
                     </div>
                 `;
                 
-                // Track & slide above the creation card node setup safely
                 container.insertBefore(newSlide, addSlide);
                 
-                // Reset inputs cleanly
+                // Clear state configurations to baseline
                 fileInput.value = '';
                 titleInput.value = '';
                 descInput.value = '';
                 fileLabel.textContent = "Select Art Photo 📸";
-                fileLabel.style.background = "white";
-                fileLabel.style.borderColor = "var(--primary-pink)";
+                fileLabel.style.borderColor = "var(--dark-pink)";
                 
-                // Jump perspective focus viewport seamlessly down to target asset immediately
                 newSlide.scrollIntoView({ behavior: 'smooth' });
             };
             reader.readAsDataURL(file);
         });
+
+        // Delete button workflow framework trigger 
+        function removeMasterpiece(buttonElement) {
+            const selectedSlide = buttonElement.closest('.slide');
+            if (selectedSlide) {
+                selectedSlide.style.opacity = '0';
+                selectedSlide.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => {
+                    selectedSlide.remove();
+                }, 300);
+            }
+        }
 
         // XSS sanitization helper injection routine
         function escapeHTML(str) {
