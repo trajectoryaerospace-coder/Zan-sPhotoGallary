@@ -147,7 +147,7 @@
             position: relative;
         }
 
-        /* Set base flex layout orders */
+        /* Fixed base sorting values for boundary layers */
         .welcome-slide { order: -9999999; }
         .add-slide { order: 9999999; }
 
@@ -608,6 +608,7 @@
             });
         });
 
+        // The sorting engine makes favorites rise to absolute top, and sorts normal images chronologically (newest first)
         function calculateFlexOrder(isFavorite, timestamp) {
             const baseTime = 1800000000000;
             const invertTime = baseTime - (timestamp || Date.now());
@@ -667,7 +668,6 @@
                     </div>
                 </div>
             `;
-            // Anchors new elements exactly right before the upload target slide
             container.insertBefore(newSlide, addSlide);
         });
 
@@ -700,6 +700,9 @@
             slide.querySelector('.edit-title-field').value = data.title;
             slide.querySelector('.edit-desc-field').value = data.description || '';
             slide.querySelector('.edit-landscape-field').checked = data.landscape;
+
+            // Forces structural re-indexing in the viewport instantly
+            container.insertBefore(slide, addSlide);
         });
 
         onChildRemoved(artworksRef, (snapshot) => {
