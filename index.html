@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zanieke's Amazing Museum</title>
+    <title>Zanieke Premium Dark Museum</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -124,6 +124,8 @@
         #gallery-container {
             width: 100vw;
             height: 100vh;
+            display: flex;
+            flex-direction: column;
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
@@ -144,6 +146,10 @@
             padding: 0;
             position: relative;
         }
+
+        /* Order placement mapping targets */
+        .welcome-slide { order: -9999999; }
+        .add-slide { order: 9999999; }
 
         .welcome-card {
             background: var(--card-bg);
@@ -172,6 +178,40 @@
             width: 100%;
             height: 100%;
             padding: 30px 25px;
+            position: relative;
+        }
+
+        /* Favorite Top Left Controller Styling */
+        .fav-wrapper {
+            position: absolute;
+            top: 30px;
+            left: 25px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(30, 20, 25, 0.6);
+            padding: 6px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .fav-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--dark-pink);
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .fav-wrapper label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            user-select: none;
         }
 
         .museum-title {
@@ -191,6 +231,10 @@
             width: 100%;
             max-height: 42vh;
             margin: 0 0 35px 0;
+            padding: 6px; /* Space for gradient border wrapper visualization */
+            border-radius: 20px;
+            background: transparent;
+            transition: background 0.3s ease;
         }
 
         .museum-frame img {
@@ -203,6 +247,12 @@
             border-radius: 14px;
             box-shadow: 0 16px 38px rgba(0, 0, 0, 0.6);
             object-fit: contain;
+            transition: border-color 0.3s ease;
+        }
+
+        /* Favorite Golden Pink Matrix Border State overrides */
+        .museum-slide.is-favorite-art .museum-frame img {
+            border-image: linear-gradient(45deg, var(--museum-gold), var(--dark-pink)) 6;
         }
 
         .museum-slide.landscape-art .museum-frame img {
@@ -266,7 +316,6 @@
         }
 
         .action-btn:active { transform: scale(0.93); }
-
         .action-btn.edit-btn {
             background: linear-gradient(135deg, rgba(255, 105, 180, 0.25), rgba(112, 161, 255, 0.25));
             border-color: rgba(255, 105, 180, 0.5);
@@ -387,20 +436,20 @@
 
     <div id="password-gateway">
         <div class="curator-card">
-            <h2>Passsord Pweaseee</h2>
+            <h2>Gallery Access Lock</h2>
             <input type="password" id="gateway-password" class="museum-input" placeholder="Enter password...">
-            <button id="gateway-submit" class="hang-btn">Openn Gallery</button>
+            <button id="gateway-submit" class="hang-btn">Unlock Gallery</button>
         </div>
     </div>
 
     <div class="water-bg">
         <div class="wave"></div>
-        <div class="wave"></div>
+        <div class="wave ="></div>
     </div>
 
     <div id="landscape-warning">
         <h2>Portrait Mode Only</h2>
-        <p>Please rotate your device upright to enter Zanieke's Art Gallery</p>
+        <p>Please rotate your device upright to enter Zanieke Art Gallery</p>
     </div>
 
     <div id="lightbox" class="fullscreen-overlay" onclick="closeLightbox()">
@@ -412,15 +461,15 @@
         <div class="slide welcome-slide">
             <div class="welcome-card">
                 <p class="welcome-top">Welcome to</p>
-                <h1 class="welcome-title">Zanieke's Amazing Photo Gallery</h1>
-                <p class="welcome-sub">It is so amazingng she is sooo talented.</p>
+                <h1 class="welcome-title">Zanieke Amazing Photo Gallery</h1>
+                <p class="welcome-sub">It is so amazing she is so talented.</p>
             </div>
             <div class="scroll-indicator">Swipe Up to Tour</div>
         </div>
 
         <div id="add-slide" class="slide add-slide">
             <div class="curator-card">
-                <h2>Upload Amazingng Photo</h2>
+                <h2>Exhibit a Masterpiece</h2>
                 
                 <label id="file-label" for="file-input" class="file-trigger">Select Art Photo</label>
                 <input type="file" id="file-input" accept="image/*">
@@ -542,7 +591,9 @@
                     title: title,
                     description: desc,
                     landscape: isLandscape,
-                    image: compressedUrl
+                    image: compressedUrl,
+                    favorite: false,
+                    timestamp: Date.now() // Track insertion order metrics for standard stacking
                 }).then(() => {
                     fileInput.value = '';
                     titleInput.value = '';
@@ -552,23 +603,39 @@
                     addBtn.disabled = false;
                     addBtn.textContent = "Hang in Gallery";
                 }).catch((error) => {
-                    alert("Firebase save failed: Check console log or security rules settings.");
-                    console.error(error);
+                    alert("Firebase save failed.");
                     addBtn.disabled = false;
                     addBtn.textContent = "Hang in Gallery";
                 });
             });
         });
 
+        // Dynamic Order Index Calculation Engine
+        function calculateFlexOrder(isFavorite, timestamp) {
+            const baseTime = 1800000000000; // Future benchmark reference mapping
+            const invertTime = baseTime - (timestamp || Date.now());
+            // Favorites receive dynamic hyper-prioritized structural indexing layout values
+            if (isFavorite) {
+                return Math.floor(-200000000000 + invertTime);
+            }
+            return Math.floor(invertTime);
+        }
+
         onChildAdded(artworksRef, (snapshot) => {
             const id = snapshot.key;
             const data = snapshot.val();
             
             const newSlide = document.createElement('div');
-            newSlide.className = `slide museum-slide ${data.landscape ? 'landscape-art' : ''}`;
+            newSlide.className = `slide museum-slide ${data.landscape ? 'landscape-art' : ''} ${data.favorite ? 'is-favorite-art' : ''}`;
             newSlide.id = `slide-${id}`;
+            newSlide.style.order = calculateFlexOrder(data.favorite, data.timestamp);
+            
             newSlide.innerHTML = `
                 <div class="view-container">
+                    <div class="fav-wrapper">
+                        <input type="checkbox" class="fav-checkbox" id="fav-check-${id}" ${data.favorite ? 'checked' : ''} onchange="toggleFavState('${id}', this.checked)">
+                        <label for="fav-check-${id}">🌟 Fav</label>
+                    </div>
                     <h2 class="museum-title">${escapeHTML(data.title)}</h2>
                     <div class="museum-frame">
                         ${data.image ? `<img src="${data.image}" class="exhibit-image" alt="Artwork" onclick="openLightbox(this)">` : ''}
@@ -604,7 +671,7 @@
                     </div>
                 </div>
             `;
-            container.insertBefore(newSlide, addSlide);
+            container.appendChild(newSlide);
         });
 
         onChildChanged(artworksRef, (snapshot) => {
@@ -613,11 +680,18 @@
             const slide = document.getElementById(`slide-${id}`);
             if (!slide) return;
 
+            slide.style.order = calculateFlexOrder(data.favorite, data.timestamp);
             slide.querySelector('.museum-title').textContent = data.title;
             slide.querySelector('.museum-desc').textContent = data.description || '';
             
             if (data.landscape) slide.classList.add('landscape-art');
             else slide.classList.remove('landscape-art');
+
+            if (data.favorite) slide.classList.add('is-favorite-art');
+            else slide.classList.remove('is-favorite-art');
+
+            const favCheckbox = slide.querySelector('.fav-checkbox');
+            if (favCheckbox) favCheckbox.checked = data.favorite;
 
             const frame = slide.querySelector('.museum-frame');
             if (data.image) {
@@ -640,6 +714,10 @@
                 setTimeout(() => { slide.remove(); }, 300);
             }
         });
+
+        window.toggleFavState = function(id, state) {
+            update(ref(db, `artworks/${id}`), { favorite: state });
+        };
 
         window.openEditor = function(id) {
             const slide = document.getElementById(`slide-${id}`);
