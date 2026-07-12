@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zanieke's Fluid Art Museum</title>
+    <title>Zanieke's Premium Dark Museum</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,34 +11,21 @@
 
     <style>
         :root {
-            /* Theme Config Base */
-            --dynamic-pink: #FFB7CE;
+            /* Permanent Dark Theme Base Color Profile */
+            --dynamic-pink: #2C0B18;
             --dark-pink: #FF69B4;
-            --pastel-blue: #BDF0FF;
-            --deep-blue: #70A1FF;
-            --museum-gold: #E6C280;
-            --text-main: #3D2E31;
-            --text-sub: #7A686B;
-            --card-bg: rgba(255, 255, 255, 0.75);
-            --frame-bg: #FFFFFF;
-        }
-
-        /* Dark Mode Variable Overrides */
-        body.dark-mode {
-            --dynamic-pink: #4A1525;
-            --dark-pink: #FF69B4;
-            --pastel-blue: #1A2634;
-            --deep-blue: #1E375A;
+            --pastel-blue: #0A141D;
+            --deep-blue: #111A24;
+            --museum-gold: #D4AF37; /* Genuine Metallic Gold */
             --text-main: #FFF0F5;
-            --text-sub: #D1C4C6;
-            --card-bg: rgba(20, 15, 20, 0.75);
-            --frame-bg: #1A1617;
+            --text-sub: #A59497;
+            --card-bg: rgba(30, 20, 25, 0.85);
+            --input-bg: #1A1215;
         }
 
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
         }
 
         html, body {
@@ -49,17 +36,18 @@
             overflow: hidden;
             font-family: 'Quicksand', sans-serif;
             color: var(--text-main);
+            background-color: var(--pastel-blue);
         }
 
         /* ---------------------------------------------------- */
-        /* Animated Fluid Water/Wave Canvas Background         */
+        /* Deep Liquid Wave Animation System                    */
         /* ---------------------------------------------------- */
         body {
             background: linear-gradient(135deg, var(--dynamic-pink), var(--pastel-blue));
             position: relative;
+            transition: background 0.5s ease;
         }
 
-        /* Dynamic Liquid/Water Waves Layer */
         .water-bg {
             position: absolute;
             width: 100%;
@@ -69,70 +57,34 @@
             z-index: 1;
             overflow: hidden;
             pointer-events: none;
-            opacity: 0.6;
+            opacity: 0.45;
         }
 
         .wave {
             position: absolute;
-            width: 200vw;
-            height: 200vw;
-            top: -120vw;
-            left: -50vw;
-            background: linear-gradient(45deg, rgba(255, 183, 206, 0.4), rgba(189, 240, 255, 0.4));
+            width: 250vw;
+            height: 250vw;
+            top: -140vw;
+            left: -75vw;
+            background: linear-gradient(45deg, rgba(255, 105, 180, 0.15), rgba(112, 161, 255, 0.15));
             border-radius: 43% 40% 45% 40%;
-            animation: drift 14s infinite linear;
+            animation: fluidDrift 18s infinite linear;
         }
 
         .wave:nth-child(2) {
-            top: -115vw;
-            background: linear-gradient(135deg, rgba(255, 105, 180, 0.2), rgba(112, 161, 255, 0.2));
+            top: -135vw;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(255, 183, 206, 0.1));
             border-radius: 40% 45% 40% 43%;
-            animation: drift 9s infinite linear;
+            animation: fluidDrift 12s infinite linear;
         }
 
-        @keyframes drift {
+        @keyframes fluidDrift {
             from { transform: rotate(0deg); }
-            from { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
 
         /* ---------------------------------------------------- */
-        /* Sticky Floating Museum Controls Control Bar          */
-        /* ---------------------------------------------------- */
-        #museum-controls {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            display: flex;
-            gap: 10px;
-            z-index: 10000;
-        }
-
-        .control-btn {
-            background: var(--card-bg);
-            border: 2px solid white;
-            padding: 10px;
-            border-radius: 50%;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            font-size: 1.2rem;
-            cursor: pointer;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .control-btn:active {
-            transform: scale(0.9);
-        }
-
-        .control-btn.active {
-            background: var(--dark-pink);
-            border-color: var(--dark-pink);
-        }
-
-        /* ---------------------------------------------------- */
-        /* Portrait Mode Enforcement Wrapper                    */
+        /* Mobile Portrait Enforcement Filter                   */
         /* ---------------------------------------------------- */
         #landscape-warning {
             position: fixed;
@@ -140,7 +92,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(135deg, #FFB7CE, #BDF0FF);
+            background: linear-gradient(135deg, #2C0B18, #0A141D);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -151,8 +103,8 @@
         }
 
         #landscape-warning .icon { font-size: 4.5rem; animation: spinDevice 2.5s infinite ease-in-out; }
-        #landscape-warning h2 { font-family: 'Fredoka', sans-serif; color: #FF69B4; font-size: 2.2rem; margin: 15px 0 10px 0; }
-        #landscape-warning p { font-size: 1.1rem; font-weight: bold; color: #4A373A; }
+        #landscape-warning h2 { font-family: 'Fredoka', sans-serif; color: var(--dark-pink); font-size: 2.2rem; margin: 15px 0 10px 0; }
+        #landscape-warning p { font-size: 1.1rem; font-weight: bold; color: var(--text-sub); }
 
         @media (orientation: landscape) {
             #landscape-warning { display: flex; }
@@ -169,7 +121,7 @@
         }
 
         /* ---------------------------------------------------- */
-        /* Snap-Scroll Gallery Container                        */
+        /* Gallery Container & Layout Engines                   */
         /* ---------------------------------------------------- */
         #gallery-container {
             width: 100vw;
@@ -189,123 +141,159 @@
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            padding: 60px 25px 40px 25px;
+            padding: 40px 25px;
             position: relative;
-            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 100%);
         }
 
-        /* ---------------------------------------------------- */
-        /* Slide 1: Fine Art Welcome Page                       */
-        /* ---------------------------------------------------- */
-        .welcome-slide { justify-content: center; gap: 15px; }
+        /* Welcome Page Frame Layout */
+        .welcome-slide { justify-content: center; }
         .welcome-card {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 2px solid white;
-            padding: 40px 25px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            padding: 45px 25px;
             border-radius: 40px;
-            box-shadow: 0 20px 40px rgba(255, 105, 180, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             text-align: center;
             width: 100%;
             max-width: 340px;
         }
         .welcome-top { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 4px; color: var(--dark-pink); margin: 0 0 10px 0; font-weight: 700; }
         .welcome-title { font-family: 'Playfair Display', serif; font-size: 2.6rem; margin: 0 0 20px 0; line-height: 1.2; font-weight: 600; }
-        .welcome-sub { font-size: 0.95rem; color: var(--text-sub); font-style: italic; border-top: 1px dashed var(--dark-pink); padding-top: 15px; margin: 0; }
-        .scroll-indicator { position: absolute; bottom: 30px; font-size: 0.9rem; font-weight: bold; color: var(--dark-pink); animation: arrowBounce 2s infinite; }
+        .welcome-sub { font-size: 0.95rem; color: var(--text-sub); font-style: italic; border-top: 1px dashed rgba(255, 105, 180, 0.3); padding-top: 15px; margin: 0; }
+        .scroll-indicator { position: absolute; bottom: 25px; font-size: 0.9rem; font-weight: bold; color: var(--dark-pink); animation: arrowBounce 2s infinite; }
 
-        @keyframes arrowBounce { 0%, 100% { transform: translateY(0); opacity: 0.6; } 50% { transform: translateY(6px); opacity: 1; } }
+        @keyframes arrowBounce { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(6px); opacity: 1; } }
 
         /* ---------------------------------------------------- */
-        /* Dynamic Exhibition Slides (Museum Layout)            */
+        /* Dynamic Exhibition Views & Adaptive Framing          */
         /* ---------------------------------------------------- */
-        .museum-title {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 1.8rem;
-            color: var(--text-main);
-            margin: 0;
-            text-shadow: 1px 1px 4px rgba(255, 255, 255, 0.5);
-            text-align: center;
+        .view-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
         }
 
+        .museum-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.9rem;
+            color: var(--text-main);
+            margin: 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Shrink-Wrap Frame Design Constraint */
         .museum-frame {
-            width: 100%;
-            flex: 1;
-            margin: 20px 0;
+            margin-top: 40px;
+            margin-bottom: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: var(--frame-bg);
-            padding: 16px;
-            border-radius: 24px;
-            box-shadow: 0 16px 35px rgba(0, 0, 0, 0.12);
-            border: 8px solid var(--museum-gold);
-            position: relative;
+            width: auto;
+            height: auto;
         }
 
         .museum-frame img {
-            width: 100%;
-            height: 100%;
+            max-width: 82vw;
+            max-height: 48vh;
+            width: auto;
+            height: auto;
+            display: block;
+            border: 6px solid var(--museum-gold);
+            border-radius: 14px;
+            box-shadow: 0 16px 38px rgba(0, 0, 0, 0.6);
             object-fit: contain;
-            border-radius: 8px;
         }
 
-        /* Absolute Remove Button Asset */
-        .remove-btn {
+        /* Clean Line Description Styling */
+        .museum-desc {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            text-align: center;
+            margin: 0;
+            max-width: 85%;
+            line-height: 1.4;
+            font-weight: 400;
+        }
+
+        /* ---------------------------------------------------- */
+        /* Ultra-Pretty Interface Action Mechanics              */
+        /* ---------------------------------------------------- */
+        .slide-controls {
             position: absolute;
-            top: -12px;
-            right: -12px;
-            background: #FF4757;
-            color: white;
-            border: 2px solid white;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            font-size: 0.9rem;
+            bottom: 25px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
-            cursor: pointer;
+            gap: 14px;
             z-index: 10;
         }
 
-        .museum-placard {
-            background: var(--card-bg);
+        .action-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-main);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            border-left: 4px solid var(--dark-pink);
-            padding: 12px 20px;
-            border-radius: 4px 16px 16px 4px;
-            width: 95%;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        .museum-desc { font-size: 1rem; margin: 0; line-height: 1.4; font-weight: 500; }
+        .action-btn:active { transform: scale(0.93); }
+
+        .action-btn.edit-btn {
+            background: linear-gradient(135deg, rgba(255, 105, 180, 0.25), rgba(112, 161, 255, 0.25));
+            border-color: rgba(255, 105, 180, 0.5);
+        }
 
         /* ---------------------------------------------------- */
-        /* Art Creator Slide Layout                             */
+        /* Editor System & Curator Panels                       */
         /* ---------------------------------------------------- */
-        .add-slide { justify-content: center; }
+        .edit-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            z-index: 15;
+        }
+
         .curator-card {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             padding: 30px 24px;
             border-radius: 36px;
-            box-shadow: 0 20px 45px rgba(255, 182, 193, 0.3);
+            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.5);
             width: 100%;
             max-width: 340px;
             display: flex;
             flex-direction: column;
             gap: 14px;
             align-items: center;
-            border: 3px dashed var(--dark-pink);
+            border: 2px dashed var(--dark-pink);
         }
-        .curator-card h2 { color: var(--dark-pink); margin: 0; font-family: 'Fredoka', sans-serif; font-size: 1.6rem; }
+
+        .curator-card h2, .curator-card h3 { 
+            color: var(--dark-pink); 
+            margin: 0; 
+            font-family: 'Fredoka', sans-serif; 
+            font-size: 1.6rem; 
+            text-align: center;
+        }
+
         input[type="file"] { display: none; }
         
         .file-trigger {
@@ -314,7 +302,7 @@
             text-align: center;
             padding: 12px;
             cursor: pointer;
-            background: var(--frame-bg);
+            background: var(--input-bg);
             color: var(--dark-pink);
             border: 2px solid var(--dark-pink);
             border-radius: 18px;
@@ -325,12 +313,12 @@
         .museum-input {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid #FFE4E1;
+            border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
             font-family: 'Quicksand', sans-serif;
             font-size: 0.95rem;
             outline: none;
-            background: var(--frame-bg);
+            background: var(--input-bg);
             color: var(--text-main);
         }
         .museum-input:focus { border-color: var(--dark-pink); }
@@ -349,6 +337,14 @@
             box-shadow: 0 6px 20px rgba(255, 105, 180, 0.3);
             width: 100%;
         }
+        .hang-btn:active { transform: translateY(2px); }
+
+        .edit-buttons-row {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+        }
+        .edit-buttons-row .action-btn { flex: 1; padding: 12px 0; border-radius: 16px; text-align: center; }
     </style>
 </head>
 <body>
@@ -356,11 +352,6 @@
     <div class="water-bg">
         <div class="wave"></div>
         <div class="wave"></div>
-    </div>
-
-    <div id="museum-controls">
-        <button id="theme-toggle" class="control-btn" title="Toggle Scroll Theme Shift">🔄</button>
-        <button id="dark-toggle" class="control-btn" title="Toggle Dark Mode">🌙</button>
     </div>
 
     <div id="landscape-warning">
@@ -405,57 +396,26 @@
         const addBtn = document.getElementById('add-btn');
         const container = document.getElementById('gallery-container');
         const addSlide = document.getElementById('add-slide');
-        
-        // System Feature Switches
-        const darkToggle = document.getElementById('dark-toggle');
-        const themeToggle = document.getElementById('theme-toggle');
-        let dynamicThemeActive = false;
 
-        // Dark Mode Logic Implementation
-        darkToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            darkToggle.classList.toggle('active');
-            darkToggle.textContent = document.body.classList.contains('dark-mode') ? "☀️" : "🌙";
-        });
-
-        // Toggle configuration state tracker for dynamically tracking scrolls
-        themeToggle.addEventListener('click', () => {
-            dynamicThemeActive = !dynamicThemeActive;
-            themeToggle.classList.toggle('active', dynamicThemeActive);
-            if(!dynamicThemeActive) {
-                // Return baseline root value configuration back cleanly
-                document.documentElement.style.setProperty('--dynamic-pink', document.body.classList.contains('dark-mode') ? '#4A1525' : '#FFB7CE');
-            }
-        });
-
-        // Tracking scroll event frames to safely cycle background tone hues manually
+        // Automatic Fluid Color Gradient Transition Engine On Scroll
         container.addEventListener('scroll', () => {
-            if (!dynamicThemeActive) return;
-            
             const maxScroll = container.scrollHeight - container.clientHeight;
             if (maxScroll <= 0) return;
             
             const scrollPercent = container.scrollTop / maxScroll;
+            const darkHue = Math.floor(290 + (scrollPercent * 65)); // Shifts tone spectrum reactively per scroll
             
-            // Map color shifts smoothly through different pink coordinates based on operational mode
-            if (document.body.classList.contains('dark-mode')) {
-                const darkHue = Math.floor(300 + (scrollPercent * 50)); // Cycles through custom deeper pink spectrum bounds
-                document.documentElement.style.setProperty('--dynamic-pink', `hsl(${darkHue}, 55%, 15%)`);
-            } else {
-                const lightHue = Math.floor(320 + (scrollPercent * 40)); // Cycles through ultra vibrant sweet pinks
-                document.documentElement.style.setProperty('--dynamic-pink', `hsl(${lightHue}, 100%, 88%)`);
-            }
+            document.documentElement.style.setProperty('--dynamic-pink', `hsl(${darkHue}, 60%, 13%)`);
         });
 
-        // Update file picker text cleanly 
+        // Basic File Picker Indicator Feedback
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
-                fileLabel.textContent = "Photo Ready! 💖";
-                fileLabel.style.borderColor = "var(--dark-pink)";
+                fileLabel.textContent = "Photo Loaded! 💖";
             }
         });
 
-        // Build dynamically insertable museum exhibit pieces
+        // Main Exhibit Creation Function
         addBtn.addEventListener('click', () => {
             const file = fileInput.files[0];
             const title = titleInput.value.trim();
@@ -469,45 +429,127 @@
                 const imageUrl = e.target.result;
                 
                 const newSlide = document.createElement('div');
-                newSlide.className = 'slide';
+                newSlide.className = 'slide museum-slide';
                 newSlide.innerHTML = `
-                    <h2 class="museum-title">${escapeHTML(title)}</h2>
-                    <div class="museum-frame">
-                        <button class="remove-btn" onclick="removeMasterpiece(this)">❌</button>
-                        <img src="${imageUrl}" alt="${escapeHTML(title)}">
+                    <div class="view-container">
+                        <h2 class="museum-title">${escapeHTML(title)}</h2>
+                        <div class="museum-frame">
+                            <img src="${imageUrl}" class="exhibit-image" alt="Artwork">
+                        </div>
+                        <p class="museum-desc">${escapeHTML(desc || '')}</p>
+                        
+                        <div class="slide-controls">
+                            <button class="action-btn edit-btn" onclick="openEditor(this)">Edit ✨</button>
+                            <button class="action-btn remove-btn" onclick="removeSlide(this)">Remove ❌</button>
+                        </div>
                     </div>
-                    <div class="museum-placard">
-                        <p class="museum-desc">${escapeHTML(desc || 'Untitled Selection.')}</p>
+
+                    <div class="edit-container" style="display: none;">
+                        <div class="curator-card">
+                            <h3>Edit Artwork</h3>
+                            <input type="text" class="museum-input edit-title-field" value="${escapeHTML(title)}">
+                            <textarea class="museum-input edit-desc-field" rows="2">${escapeHTML(desc || '')}</textarea>
+                            
+                            <label class="file-trigger">Update Photo 📸
+                                <input type="file" accept="image/*" class="edit-file-field" onchange="cacheNewImage(this)">
+                            </label>
+                            
+                            <button class="action-btn" style="background:#FF4757; color:white; border:none;" onclick="flagImageRemoval(this)">Remove Image 🖼️❌</button>
+                            
+                            <div class="edit-buttons-row">
+                                <button class="action-btn" onclick="closeEditor(this)">Cancel</button>
+                                <button class="action-btn edit-btn" onclick="saveSlideEdits(this)">Save</button>
+                            </div>
+                        </div>
                     </div>
                 `;
                 
                 container.insertBefore(newSlide, addSlide);
                 
-                // Clear state configurations to baseline
+                // Clear baseline controller values cleanly
                 fileInput.value = '';
                 titleInput.value = '';
                 descInput.value = '';
                 fileLabel.textContent = "Select Art Photo 📸";
-                fileLabel.style.borderColor = "var(--dark-pink)";
                 
                 newSlide.scrollIntoView({ behavior: 'smooth' });
             };
             reader.readAsDataURL(file);
         });
 
-        // Delete button workflow framework trigger 
-        function removeMasterpiece(buttonElement) {
-            const selectedSlide = buttonElement.closest('.slide');
-            if (selectedSlide) {
-                selectedSlide.style.opacity = '0';
-                selectedSlide.style.transition = 'opacity 0.3s ease';
-                setTimeout(() => {
-                    selectedSlide.remove();
-                }, 300);
+        /* ---------------------------------------------------- */
+        /* Dynamic Slide Editor Automation Engines              */
+        /* ---------------------------------------------------- */
+        function openEditor(btn) {
+            const slide = btn.closest('.slide');
+            slide.querySelector('.view-container').style.display = 'none';
+            slide.querySelector('.edit-container').style.display = 'flex';
+        }
+
+        function closeEditor(btn) {
+            const slide = btn.closest('.slide');
+            slide.removeAttribute('data-pending-img'); // Discard unsaved image changes
+            slide.querySelector('.edit-container').style.display = 'none';
+            slide.querySelector('.view-container').style.display = 'flex';
+        }
+
+        function cacheNewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const slide = input.closest('.slide');
+                    slide.setAttribute('data-pending-img', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
             }
         }
 
-        // XSS sanitization helper injection routine
+        function flagImageRemoval(btn) {
+            const slide = btn.closest('.slide');
+            slide.setAttribute('data-pending-img', 'REMOVE_IMAGE');
+            alert('Image flagged for removal. Click Save to apply changes! ❌');
+        }
+
+        function saveSlideEdits(btn) {
+            const slide = btn.closest('.slide');
+            const newTitle = slide.querySelector('.edit-title-field').value.trim();
+            const newDesc = slide.querySelector('.edit-desc-field').value.trim();
+            
+            if (!newTitle) { alert('Title cannot be empty! 🏷️'); return; }
+
+            // Commit plain texts
+            slide.querySelector('.museum-title').textContent = newTitle;
+            slide.querySelector('.museum-desc').textContent = newDesc;
+
+            // Address Image Modification Requests
+            const pendingImg = slide.getAttribute('data-pending-img');
+            const frame = slide.querySelector('.museum-frame');
+            const imgElement = slide.querySelector('.exhibit-image');
+
+            if (pendingImg === 'REMOVE_IMAGE') {
+                if(imgElement) imgElement.remove();
+                frame.style.display = 'none'; // Removes spacing elegantly if photo is cleared
+            } else if (pendingImg) {
+                if (!imgElement) {
+                    // Recreate structural node wrapper if it was previously deleted
+                    frame.innerHTML = `<img src="${pendingImg}" class="exhibit-image" alt="Artwork">`;
+                    frame.style.display = 'flex';
+                } else {
+                    imgElement.src = pendingImg;
+                }
+            }
+
+            slide.removeAttribute('data-pending-img');
+            closeEditor(btn);
+        }
+
+        function removeSlide(btn) {
+            const slide = btn.closest('.slide');
+            slide.style.opacity = '0';
+            slide.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => { slide.remove(); }, 300);
+        }
+
         function escapeHTML(str) {
             return str.replace(/[&<>'"]/g, 
                 tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
