@@ -16,7 +16,7 @@
             --dark-pink: #FF69B4;
             --pastel-blue: #0A141D;
             --deep-blue: #111A24;
-            --museum-gold: #D4AF37; /* Genuine Metallic Gold */
+            --museum-gold: #D4AF37; /* Metallic Gold */
             --text-main: #FFF0F5;
             --text-sub: #A59497;
             --card-bg: rgba(30, 20, 25, 0.85);
@@ -102,7 +102,6 @@
             padding: 30px;
         }
 
-        #landscape-warning .icon { font-size: 4.5rem; animation: spinDevice 2.5s infinite ease-in-out; }
         #landscape-warning h2 { font-family: 'Fredoka', sans-serif; color: var(--dark-pink); font-size: 2.2rem; margin: 15px 0 10px 0; }
         #landscape-warning p { font-size: 1.1rem; font-weight: bold; color: var(--text-sub); }
 
@@ -113,11 +112,6 @@
         @media (orientation: portrait) {
             #landscape-warning { display: none; }
             #gallery-container { display: block; }
-        }
-
-        @keyframes spinDevice {
-            0%, 100% { transform: rotate(90deg); }
-            50% { transform: rotate(0deg); }
         }
 
         /* ---------------------------------------------------- */
@@ -143,7 +137,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 40px 25px;
+            padding: 0 25px;
             position: relative;
         }
 
@@ -164,12 +158,12 @@
         .welcome-top { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 4px; color: var(--dark-pink); margin: 0 0 10px 0; font-weight: 700; }
         .welcome-title { font-family: 'Playfair Display', serif; font-size: 2.6rem; margin: 0 0 20px 0; line-height: 1.2; font-weight: 600; }
         .welcome-sub { font-size: 0.95rem; color: var(--text-sub); font-style: italic; border-top: 1px dashed rgba(255, 105, 180, 0.3); padding-top: 15px; margin: 0; }
-        .scroll-indicator { position: absolute; bottom: 25px; font-size: 0.9rem; font-weight: bold; color: var(--dark-pink); animation: arrowBounce 2s infinite; }
+        .scroll-indicator { position: absolute; bottom: 45px; font-size: 0.9rem; font-weight: bold; color: var(--dark-pink); animation: arrowBounce 2s infinite; }
 
         @keyframes arrowBounce { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(6px); opacity: 1; } }
 
         /* ---------------------------------------------------- */
-        /* Dynamic Exhibition Views & Adaptive Framing          */
+        /* Dynamic Exhibition Views & Perfect Center Framing    */
         /* ---------------------------------------------------- */
         .view-container {
             display: flex;
@@ -178,6 +172,7 @@
             justify-content: center;
             width: 100%;
             height: 100%;
+            padding-bottom: 60px; /* Counter-balances the absolute control bar to ensure perfect centering */
         }
 
         .museum-title {
@@ -189,7 +184,7 @@
             font-weight: 600;
         }
 
-        /* Shrink-Wrap Frame Design Constraint */
+        /* Strict 40px Shrink-Wrap Frame Structure */
         .museum-frame {
             margin-top: 40px;
             margin-bottom: 40px;
@@ -212,7 +207,7 @@
             object-fit: contain;
         }
 
-        /* Clean Line Description Styling */
+        /* Clean Grey Subtitle Metric */
         .museum-desc {
             font-size: 0.95rem;
             color: var(--text-sub);
@@ -224,11 +219,11 @@
         }
 
         /* ---------------------------------------------------- */
-        /* Ultra-Pretty Interface Action Mechanics              */
+        /* Action Utility System Controls                       */
         /* ---------------------------------------------------- */
         .slide-controls {
             position: absolute;
-            bottom: 25px;
+            bottom: 45px;
             display: flex;
             gap: 14px;
             z-index: 10;
@@ -258,7 +253,7 @@
         }
 
         /* ---------------------------------------------------- */
-        /* Editor System & Curator Panels                       */
+        /* Editor Container Infrastructure                      */
         /* ---------------------------------------------------- */
         .edit-container {
             display: flex;
@@ -355,9 +350,8 @@
     </div>
 
     <div id="landscape-warning">
-        <div class="icon">📱✨</div>
         <h2>Portrait Mode Only</h2>
-        <p>Please rotate your device upright to enter Zanieke's Art Gallery!</p>
+        <p>Please rotate your device upright to enter Zanieke's Art Gallery</p>
     </div>
 
     <div id="gallery-container">
@@ -366,23 +360,23 @@
             <div class="welcome-card">
                 <p class="welcome-top">Welcome to</p>
                 <h1 class="welcome-title">Zanieke's Amazing Photo Gallery</h1>
-                <p class="welcome-sub">It's so amazing she's so talanted.</p>
+                <p class="welcome-sub">It's so amazing she's so talented.</p>
             </div>
-            <div class="scroll-indicator">Swipe Up to Tour 🎀</div>
+            <div class="scroll-indicator">Swipe Up to Tour</div>
         </div>
 
         <div id="add-slide" class="slide add-slide">
             <div class="curator-card">
-                <h2>Exhibit a Masterpiece 🎨</h2>
+                <h2>Exhibit a Masterpiece</h2>
                 
-                <label id="file-label" for="file-input" class="file-trigger">Select Art Photo 📸</label>
+                <label id="file-label" for="file-input" class="file-trigger">Select Art Photo</label>
                 <input type="file" id="file-input" accept="image/*">
                 
                 <input type="text" id="title-input" class="museum-input" placeholder="Name of your masterpiece..." autocomplete="off">
                 
                 <textarea id="desc-input" class="museum-input" placeholder="Describe the artistic vision..." rows="2"></textarea>
                 
-                <button id="add-btn" class="hang-btn">Hang in Gallery ✨</button>
+                <button id="add-btn" class="hang-btn">Hang in Gallery</button>
             </div>
         </div>
 
@@ -403,7 +397,7 @@
             if (maxScroll <= 0) return;
             
             const scrollPercent = container.scrollTop / maxScroll;
-            const darkHue = Math.floor(290 + (scrollPercent * 65)); // Shifts tone spectrum reactively per scroll
+            const darkHue = Math.floor(290 + (scrollPercent * 65)); // Shifts color spectrum tone reactively per scroll
             
             document.documentElement.style.setProperty('--dynamic-pink', `hsl(${darkHue}, 60%, 13%)`);
         });
@@ -411,7 +405,7 @@
         // Basic File Picker Indicator Feedback
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
-                fileLabel.textContent = "Photo Loaded! 💖";
+                fileLabel.textContent = "Photo Loaded";
             }
         });
 
@@ -421,8 +415,8 @@
             const title = titleInput.value.trim();
             const desc = descInput.value.trim();
             
-            if (!file) { alert('Please pick a stunning photograph to exhibit! 📸'); return; }
-            if (!title) { alert('Every great masterpiece needs a title! 🏷️'); return; }
+            if (!file) { alert('Please pick a photograph to exhibit'); return; }
+            if (!title) { alert('Every masterpiece needs a title'); return; }
             
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -439,8 +433,8 @@
                         <p class="museum-desc">${escapeHTML(desc || '')}</p>
                         
                         <div class="slide-controls">
-                            <button class="action-btn edit-btn" onclick="openEditor(this)">Edit ✨</button>
-                            <button class="action-btn remove-btn" onclick="removeSlide(this)">Remove ❌</button>
+                            <button class="action-btn edit-btn" onclick="openEditor(this)">Edit</button>
+                            <button class="action-btn remove-btn" onclick="removeSlide(this)">Remove</button>
                         </div>
                     </div>
 
@@ -450,11 +444,11 @@
                             <input type="text" class="museum-input edit-title-field" value="${escapeHTML(title)}">
                             <textarea class="museum-input edit-desc-field" rows="2">${escapeHTML(desc || '')}</textarea>
                             
-                            <label class="file-trigger">Update Photo 📸
+                            <label class="file-trigger">Update Photo
                                 <input type="file" accept="image/*" class="edit-file-field" onchange="cacheNewImage(this)">
                             </label>
                             
-                            <button class="action-btn" style="background:#FF4757; color:white; border:none;" onclick="flagImageRemoval(this)">Remove Image 🖼️❌</button>
+                            <button class="action-btn" style="background:#FF4757; color:white; border:none;" onclick="flagImageRemoval(this)">Remove Image</button>
                             
                             <div class="edit-buttons-row">
                                 <button class="action-btn" onclick="closeEditor(this)">Cancel</button>
@@ -470,7 +464,7 @@
                 fileInput.value = '';
                 titleInput.value = '';
                 descInput.value = '';
-                fileLabel.textContent = "Select Art Photo 📸";
+                fileLabel.textContent = "Select Art Photo";
                 
                 newSlide.scrollIntoView({ behavior: 'smooth' });
             };
@@ -507,7 +501,7 @@
         function flagImageRemoval(btn) {
             const slide = btn.closest('.slide');
             slide.setAttribute('data-pending-img', 'REMOVE_IMAGE');
-            alert('Image flagged for removal. Click Save to apply changes! ❌');
+            alert('Image flagged for removal. Click Save to apply changes');
         }
 
         function saveSlideEdits(btn) {
@@ -515,7 +509,7 @@
             const newTitle = slide.querySelector('.edit-title-field').value.trim();
             const newDesc = slide.querySelector('.edit-desc-field').value.trim();
             
-            if (!newTitle) { alert('Title cannot be empty! 🏷️'); return; }
+            if (!newTitle) { alert('Title cannot be empty'); return; }
 
             // Commit plain texts
             slide.querySelector('.museum-title').textContent = newTitle;
