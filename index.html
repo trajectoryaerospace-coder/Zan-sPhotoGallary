@@ -147,7 +147,7 @@
             position: relative;
         }
 
-        /* Fixed positions for structural items */
+        /* Set base flex layout orders */
         .welcome-slide { order: -9999999; }
         .add-slide { order: 9999999; }
 
@@ -608,7 +608,6 @@
             });
         });
 
-        // Dynamic sorting framework (favorites float top, newest below them, add-slide stays bottom)
         function calculateFlexOrder(isFavorite, timestamp) {
             const baseTime = 1800000000000;
             const invertTime = baseTime - (timestamp || Date.now());
@@ -668,7 +667,8 @@
                     </div>
                 </div>
             `;
-            container.appendChild(newSlide);
+            // Anchors new elements exactly right before the upload target slide
+            container.insertBefore(newSlide, addSlide);
         });
 
         onChildChanged(artworksRef, (snapshot) => {
