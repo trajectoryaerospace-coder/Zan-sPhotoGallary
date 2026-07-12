@@ -172,7 +172,7 @@
             justify-content: center;
             width: 100%;
             height: 100%;
-            padding-bottom: 60px; /* Counter-balances the control bar position for absolute vertical centering */
+            padding-bottom: 60px; /* Counter-balances control bar position for centering */
         }
 
         .museum-title {
@@ -184,7 +184,7 @@
             font-weight: 600;
         }
 
-        /* Standard 40px Frame constraints */
+        /* Standard Frame Layout constraints */
         .museum-frame {
             margin-top: 40px;
             margin-bottom: 40px;
@@ -205,13 +205,22 @@
             border-radius: 14px;
             box-shadow: 0 16px 38px rgba(0, 0, 0, 0.6);
             object-fit: contain;
+            transition: transform 0.3s ease;
         }
 
-        /* Landscape Modifier for maximizing screen real estate */
+        /* Flipped 90-Degree Landscape Force Layout */
+        .museum-slide.landscape-art .museum-frame {
+            /* Swaps bounds container sizes to avoid text overlapping */
+            min-height: 52vh; 
+            width: 82vw;
+        }
+
         .museum-slide.landscape-art .museum-frame img {
-            max-width: 94vw;
-            max-height: 52vh;
-            width: 100%;
+            /* Rotates image and maps height directly to the screen length width rules */
+            transform: rotate(90deg);
+            max-width: 46vh !important;
+            max-height: 82vw !important;
+            object-fit: contain;
         }
 
         /* Clean Grey Subtitle Metric */
@@ -433,7 +442,7 @@
             if (maxScroll <= 0) return;
             
             const scrollPercent = container.scrollTop / maxScroll;
-            const darkHue = Math.floor(290 + (scrollPercent * 65)); // Shifts color spectrum tone reactively per scroll
+            const darkHue = Math.floor(290 + (scrollPercent * 65));
             
             document.documentElement.style.setProperty('--dynamic-pink', `hsl(${darkHue}, 60%, 13%)`);
         });
@@ -525,7 +534,7 @@
 
         function closeEditor(btn) {
             const slide = btn.closest('.slide');
-            slide.removeAttribute('data-pending-img'); // Discard unsaved image changes
+            slide.removeAttribute('data-pending-img');
             slide.querySelector('.edit-container').style.display = 'none';
             slide.querySelector('.view-container').style.display = 'flex';
         }
@@ -573,10 +582,9 @@
 
             if (pendingImg === 'REMOVE_IMAGE') {
                 if(imgElement) imgElement.remove();
-                frame.style.display = 'none'; // Removes spacing elegantly if photo is cleared
+                frame.style.display = 'none';
             } else if (pendingImg) {
                 if (!imgElement) {
-                    // Recreate structural node wrapper if it was previously deleted
                     frame.innerHTML = `<img src="${pendingImg}" class="exhibit-image" alt="Artwork">`;
                     frame.style.display = 'flex';
                 } else {
@@ -595,7 +603,6 @@
             setTimeout(() => { slide.remove(); }, 300);
         }
 
-        // Contextual escaping to prevent rendering bugs
         function escapeHTML(str) {
             return str.replace(/[&<>'"]/g, 
                 tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
