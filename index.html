@@ -147,7 +147,7 @@
             position: relative;
         }
 
-        /* Order placement mapping targets */
+        /* Fixed positions for structural items */
         .welcome-slide { order: -9999999; }
         .add-slide { order: 9999999; }
 
@@ -181,7 +181,6 @@
             position: relative;
         }
 
-        /* Favorite Top Left Controller Styling */
         .fav-wrapper {
             position: absolute;
             top: 30px;
@@ -231,7 +230,7 @@
             width: 100%;
             max-height: 42vh;
             margin: 0 0 35px 0;
-            padding: 6px; /* Space for gradient border wrapper visualization */
+            padding: 6px;
             border-radius: 20px;
             background: transparent;
             transition: background 0.3s ease;
@@ -250,7 +249,6 @@
             transition: border-color 0.3s ease;
         }
 
-        /* Favorite Golden Pink Matrix Border State overrides */
         .museum-slide.is-favorite-art .museum-frame img {
             border-image: linear-gradient(45deg, var(--museum-gold), var(--dark-pink)) 6;
         }
@@ -444,7 +442,7 @@
 
     <div class="water-bg">
         <div class="wave"></div>
-        <div class="wave ="></div>
+        <div class="wave"></div>
     </div>
 
     <div id="landscape-warning">
@@ -593,7 +591,7 @@
                     landscape: isLandscape,
                     image: compressedUrl,
                     favorite: false,
-                    timestamp: Date.now() // Track insertion order metrics for standard stacking
+                    timestamp: Date.now()
                 }).then(() => {
                     fileInput.value = '';
                     titleInput.value = '';
@@ -610,11 +608,10 @@
             });
         });
 
-        // Dynamic Order Index Calculation Engine
+        // Dynamic sorting framework (favorites float top, newest below them, add-slide stays bottom)
         function calculateFlexOrder(isFavorite, timestamp) {
-            const baseTime = 1800000000000; // Future benchmark reference mapping
+            const baseTime = 1800000000000;
             const invertTime = baseTime - (timestamp || Date.now());
-            // Favorites receive dynamic hyper-prioritized structural indexing layout values
             if (isFavorite) {
                 return Math.floor(-200000000000 + invertTime);
             }
@@ -634,7 +631,7 @@
                 <div class="view-container">
                     <div class="fav-wrapper">
                         <input type="checkbox" class="fav-checkbox" id="fav-check-${id}" ${data.favorite ? 'checked' : ''} onchange="toggleFavState('${id}', this.checked)">
-                        <label for="fav-check-${id}">🌟 Fav</label>
+                        <label for="fav-check-${id}">Fav</label>
                     </div>
                     <h2 class="museum-title">${escapeHTML(data.title)}</h2>
                     <div class="museum-frame">
