@@ -44,6 +44,21 @@
             transition: background 0.5s ease;
         }
 
+        /* Password protection gateway screen overlay */
+        #password-gateway {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #2C0B18, #0A141D);
+            z-index: 100000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+        }
+
         .water-bg {
             position: absolute;
             width: 100%;
@@ -151,7 +166,7 @@
         @keyframes arrowBounce { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(6px); opacity: 1; } }
 
         /* ---------------------------------------------------- */
-        /* Center View Port Presentation Setup                  */
+        /* Core View Presentation Setup                         */
         /* ---------------------------------------------------- */
         .view-container {
             display: flex;
@@ -165,9 +180,9 @@
 
         .museum-title {
             font-family: 'Fredoka', sans-serif;
-            font-size: 1.9rem;
+            font-size: 2.6rem; /* 37% Increase from original baseline */
             color: var(--text-main);
-            margin: 0 0 15px 0; /* Tight 15px buffer to photo frame */
+            margin: 0 0 35px 0; /* Updated to 35px buffer space */
             text-align: center;
             font-weight: 600;
             width: 100%;
@@ -178,13 +193,13 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            max-height: 50vh; /* Controlled boundary sizes to balance spacing */
-            margin: 0 0 15px 0; /* Tight 15px buffer to description layout */
+            max-height: 42vh;
+            margin: 0 0 35px 0; /* Updated to 35px buffer space */
         }
 
         .museum-frame img {
             max-width: 100%;
-            max-height: 50vh;
+            max-height: 42vh;
             width: auto;
             height: auto;
             display: block;
@@ -202,7 +217,7 @@
             font-size: 0.95rem;
             color: var(--text-sub);
             text-align: center;
-            margin: 0 0 15px 0; /* Tight 15px buffer to active control buttons row */
+            margin: 0 0 35px 0; /* Synchronized to 35px buffer space */
             max-width: 85%;
             line-height: 1.4;
             font-weight: 400;
@@ -241,7 +256,7 @@
             display: block;
         }
 
-        /* Action Buttons & Forms */
+        /* Action Buttons & Core Interface Elements */
         .action-btn {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -378,6 +393,14 @@
 </head>
 <body>
 
+    <div id="password-gateway">
+        <div class="curator-card">
+            <h2>Gallery Access Lock</h2>
+            <input type="password" id="gateway-password" class="museum-input" placeholder="Enter password...">
+            <button id="gateway-submit" class="hang-btn">Unlock Gallery</button>
+        </div>
+    </div>
+
     <div class="water-bg">
         <div class="wave"></div>
         <div class="wave"></div>
@@ -392,7 +415,7 @@
         <img id="lightbox-img" src="" alt="Fullscreen Artwork">
     </div>
 
-    <div id="gallery-container">
+    <div id="gallery-container" style="display: none;">
         
         <div class="slide welcome-slide">
             <div class="welcome-card">
@@ -425,7 +448,24 @@
 
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+        import { getDatabase, ref, push, set, onChildAdded, onChildChanged, onChildRemoved, update, remove } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAgeeyZ62BLz28AkrxQVqj5LCDUeESETyc",
+            authDomain: "amazinggallaryzan.firebaseapp.com",
+            projectId: "amazinggallaryzan",
+            storageBucket: "amazinggallaryzan.firebasestorage.app",
+            messagingSenderId: "497137144336",
+            appId: "1:497137144336:web:3ca5b81a40d0de7e5bf095"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app, "https://amazinggallaryzan-default-rtdb.firebaseio.com");
+        const artworksRef = ref(db, 'artworks');
+
+        // Global interface references 
         const fileInput = document.getElementById('file-input');
         const fileLabel = document.getElementById('file-label');
         const titleInput = document.getElementById('title-input');
@@ -434,25 +474,73 @@
         const addBtn = document.getElementById('add-btn');
         const container = document.getElementById('gallery-container');
         const addSlide = document.getElementById('add-slide');
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightbox-img');
 
+        /* ---------------------------------------------------- */
+        /* Local Memory Identity Password Check Verification    */
+        /* ---------------------------------------------------- */
+        const gatewayScreen = document.getElementById('password-gateway');
+        const passwordField = document.getElementById('gateway-password');
+        const submitPassword = document.getElementById('gateway-submit');
+
+        if (localStorage.getItem('zan_gallery_auth') === 'passed') {
+            gatewayScreen.style.display = 'none';
+            container.style.display = 'block';
+        }
+
+        submitPassword.addEventListener('click', () => {
+            if (passwordField.value === 'ilovezan') {
+                localStorage.setItem('zan_gallery_auth', 'passed');
+                gatewayScreen.style.display = 'none';
+                container.style.display = 'block';
+            } else {
+                alert('Incorrect gallery key entry credential.');
+            }
+        });
+
+        // Dynamic fluid theme controller 
         container.addEventListener('scroll', () => {
             const maxScroll = container.scrollHeight - container.clientHeight;
             if (maxScroll <= 0) return;
-            
             const scrollPercent = container.scrollTop / maxScroll;
             const darkHue = Math.floor(290 + (scrollPercent * 65));
-            
             document.documentElement.style.setProperty('--dynamic-pink', `hsl(${darkHue}, 60%, 13%)`);
         });
 
         fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                fileLabel.textContent = "Photo Loaded";
-            }
+            if (e.target.files.length > 0) fileLabel.textContent = "Photo Loaded";
         });
 
+        // Image optimization scaling logic to handle payload constraints
+        function resizeAndCompressImage(file, callback) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function (event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 800;
+                    const MAX_HEIGHT = 800;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                    } else {
+                        if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/jpeg', 0.7));
+                };
+            };
+        }
+
+        /* ---------------------------------------------------- */
+        /* Outbound Data Creation Action Emitters               */
+        /* ---------------------------------------------------- */
         addBtn.addEventListener('click', () => {
             const file = fileInput.files[0];
             const title = titleInput.value.trim();
@@ -462,155 +550,190 @@
             if (!file) { alert('Please pick a photograph to exhibit'); return; }
             if (!title) { alert('Every masterpiece needs a title'); return; }
             
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const imageUrl = e.target.result;
-                
-                const newSlide = document.createElement('div');
-                newSlide.className = `slide museum-slide ${isLandscape ? 'landscape-art' : ''}`;
-                newSlide.innerHTML = `
-                    <div class="view-container">
-                        <h2 class="museum-title">${escapeHTML(title)}</h2>
-                        <div class="museum-frame">
-                            <img src="${imageUrl}" class="exhibit-image" alt="Artwork" onclick="openLightbox(this)">
-                        </div>
-                        <p class="museum-desc">${escapeHTML(desc || '')}</p>
-                        
-                        <div class="slide-controls">
-                            <button class="action-btn edit-btn" onclick="openEditor(this)">Edit</button>
-                            <button class="action-btn remove-btn" onclick="removeSlide(this)">Remove</button>
-                        </div>
-                    </div>
-
-                    <div class="edit-container" style="display: none;">
-                        <div class="curator-card">
-                            <h3>Edit Artwork</h3>
-                            <input type="text" class="museum-input edit-title-field" value="${escapeHTML(title)}">
-                            <textarea class="museum-input edit-desc-field" rows="2">${escapeHTML(desc || '')}</textarea>
-                            
-                            <div class="checkbox-row">
-                                <input type="checkbox" class="edit-landscape-field" ${isLandscape ? 'checked' : ''}>
-                                <label>Landscape Layout</label>
-                            </div>
-
-                            <label class="file-trigger">Update Photo
-                                <input type="file" accept="image/*" class="edit-file-field" onchange="cacheNewImage(this)">
-                            </label>
-                            
-                            <button class="action-btn" style="background:#FF4757; color:white; border:none;" onclick="flagImageRemoval(this)">Remove Image</button>
-                            
-                            <div class="edit-buttons-row">
-                                <button class="action-btn" onclick="closeEditor(this)">Cancel</button>
-                                <button class="action-btn edit-btn" onclick="saveSlideEdits(this)">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                container.insertBefore(newSlide, addSlide);
-                
-                fileInput.value = '';
-                titleInput.value = '';
-                descInput.value = '';
-                landscapeCheckbox.checked = false;
-                fileLabel.textContent = "Select Art Photo";
-                
-                newSlide.scrollIntoView({ behavior: 'smooth' });
-            };
-            reader.readAsDataURL(file);
+            resizeAndCompressImage(file, function(compressedUrl) {
+                const newArtRef = push(artworksRef);
+                set(newArtRef, {
+                    title: title,
+                    description: desc,
+                    landscape: isLandscape,
+                    image: compressedUrl
+                }).then(() => {
+                    fileInput.value = '';
+                    titleInput.value = '';
+                    descInput.value = '';
+                    landscapeCheckbox.checked = false;
+                    fileLabel.textContent = "Select Art Photo";
+                });
+            });
         });
 
-        function openLightbox(imgElement) {
-            const slide = imgElement.closest('.slide');
-            if (slide.classList.contains('landscape-art')) {
-                lightboxImg.src = imgElement.src;
-                lightbox.style.display = 'flex';
+        /* ---------------------------------------------------- */
+        /* Firebase Realtime Core Sync Syncing Engines          */
+        /* ---------------------------------------------------- */
+        onChildAdded(artworksRef, (snapshot) => {
+            const id = snapshot.key;
+            const data = snapshot.val();
+            
+            const newSlide = document.createElement('div');
+            newSlide.className = `slide museum-slide ${data.landscape ? 'landscape-art' : ''}`;
+            newSlide.id = `slide-${id}`;
+            newSlide.innerHTML = `
+                <div class="view-container">
+                    <h2 class="museum-title">${escapeHTML(data.title)}</h2>
+                    <div class="museum-frame">
+                        ${data.image ? `<img src="${data.image}" class="exhibit-image" alt="Artwork" onclick="openLightbox(this)">` : ''}
+                    </div>
+                    <p class="museum-desc">${escapeHTML(data.description || '')}</p>
+                    <div class="slide-controls">
+                        <button class="action-btn edit-btn" onclick="openEditor('${id}')">Edit</button>
+                        <button class="action-btn remove-btn" onclick="fbRemoveSlide('${id}')">Remove</button>
+                    </div>
+                </div>
+
+                <div class="edit-container" style="display: none;">
+                    <div class="curator-card">
+                        <h3>Edit Artwork</h3>
+                        <input type="text" class="museum-input edit-title-field" value="${escapeHTML(data.title)}">
+                        <textarea class="museum-input edit-desc-field" rows="2">${escapeHTML(data.description || '')}</textarea>
+                        
+                        <div class="checkbox-row">
+                            <input type="checkbox" class="edit-landscape-field" ${data.landscape ? 'checked' : ''}>
+                            <label>Landscape Layout</label>
+                        </div>
+
+                        <label class="file-trigger">Update Photo
+                            <input type="file" accept="image/*" class="edit-file-field" onchange="cacheEditImage(this, '${id}')">
+                        </label>
+                        
+                        <button class="action-btn" style="background:#FF4757; color:white; border:none;" onclick="flagEditImageRemoval('${id}')">Remove Image</button>
+                        
+                        <div class="edit-buttons-row">
+                            <button class="action-btn" onclick="closeEditor('${id}')">Cancel</button>
+                            <button class="action-btn edit-btn" onclick="fbSaveSlideEdits('${id}')">Save</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertBefore(newSlide, addSlide);
+        });
+
+        onChildChanged(artworksRef, (snapshot) => {
+            const id = snapshot.key;
+            const data = snapshot.val();
+            const slide = document.getElementById(`slide-${id}`);
+            if (!slide) return;
+
+            slide.querySelector('.museum-title').textContent = data.title;
+            slide.querySelector('.museum-desc').textContent = data.description || '';
+            
+            if (data.landscape) slide.classList.add('landscape-art');
+            else slide.classList.remove('landscape-art');
+
+            const frame = slide.querySelector('.museum-frame');
+            if (data.image) {
+                frame.innerHTML = `<img src="${data.image}" class="exhibit-image" alt="Artwork" onclick="openLightbox(this)">`;
+            } else {
+                frame.innerHTML = '';
             }
-        }
 
-        function closeLightbox() {
-            lightbox.style.display = 'none';
-            lightboxImg.src = '';
-        }
+            // Sync the values inside editing form elements contextually
+            slide.querySelector('.edit-title-field').value = data.title;
+            slide.querySelector('.edit-desc-field').value = data.description || '';
+            slide.querySelector('.edit-landscape-field').checked = data.landscape;
+        });
 
-        function openEditor(btn) {
-            const slide = btn.closest('.slide');
+        onChildRemoved(artworksRef, (snapshot) => {
+            const id = snapshot.key;
+            const slide = document.getElementById(`slide-${id}`);
+            if (slide) {
+                slide.style.opacity = '0';
+                slide.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => { slide.remove(); }, 300);
+            }
+        });
+
+        /* ---------------------------------------------------- */
+        /* Downbound Modification Handlers Binded To Window     */
+        /* ---------------------------------------------------- */
+        window.openEditor = function(id) {
+            const slide = document.getElementById(`slide-${id}`);
             slide.querySelector('.view-container').style.display = 'none';
             slide.querySelector('.edit-container').style.display = 'flex';
-        }
+        };
 
-        function closeEditor(btn) {
-            const slide = btn.closest('.slide');
+        window.closeEditor = function(id) {
+            const slide = document.getElementById(`slide-${id}`);
             slide.removeAttribute('data-pending-img');
             slide.querySelector('.edit-container').style.display = 'none';
             slide.querySelector('.view-container').style.display = 'flex';
-        }
+        };
 
-        function cacheNewImage(input) {
+        window.cacheEditImage = function(input, id) {
             if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const slide = input.closest('.slide');
-                    slide.setAttribute('data-pending-img', e.target.result);
-                };
-                reader.readAsDataURL(input.files[0]);
+                resizeAndCompressImage(input.files[0], function(compressedUrl) {
+                    const slide = document.getElementById(`slide-${id}`);
+                    slide.setAttribute('data-pending-img', compressedUrl);
+                });
             }
-        }
+        };
 
-        function flagImageRemoval(btn) {
-            const slide = btn.closest('.slide');
+        window.flagEditImageRemoval = function(id) {
+            const slide = document.getElementById(`slide-${id}`);
             slide.setAttribute('data-pending-img', 'REMOVE_IMAGE');
-            alert('Image flagged for removal. Click Save to apply changes');
-        }
+            alert('Image flagged for removal. Click Save to execute.');
+        };
 
-        function saveSlideEdits(btn) {
-            const slide = btn.closest('.slide');
+        window.fbSaveSlideEdits = function(id) {
+            const slide = document.getElementById(`slide-${id}`);
             const newTitle = slide.querySelector('.edit-title-field').value.trim();
             const newDesc = slide.querySelector('.edit-desc-field').value.trim();
             const checkLandscape = slide.querySelector('.edit-landscape-field').checked;
             
             if (!newTitle) { alert('Title cannot be empty'); return; }
 
-            slide.querySelector('.museum-title').textContent = newTitle;
-            slide.querySelector('.museum-desc').textContent = newDesc;
-
-            if (checkLandscape) {
-                slide.classList.add('landscape-art');
-            } else {
-                slide.classList.remove('landscape-art');
-            }
+            const updates = {
+                title: newTitle,
+                description: newDesc,
+                landscape: checkLandscape
+            };
 
             const pendingImg = slide.getAttribute('data-pending-img');
-            const frame = slide.querySelector('.museum-frame');
-            const imgElement = slide.querySelector('.exhibit-image');
-
             if (pendingImg === 'REMOVE_IMAGE') {
-                if(imgElement) imgElement.remove();
-                frame.style.display = 'none';
+                updates.image = "";
             } else if (pendingImg) {
-                if (!imgElement) {
-                    frame.innerHTML = `<img src="${pendingImg}" class="exhibit-image" alt="Artwork" onclick="openLightbox(this)">`;
-                    frame.style.display = 'flex';
-                } else {
-                    imgElement.src = pendingImg;
-                }
+                updates.image = pendingImg;
             }
 
-            slide.removeAttribute('data-pending-img');
-            closeEditor(btn);
-        }
+            update(ref(db, `artworks/${id}`), updates).then(() => {
+                slide.removeAttribute('data-pending-img');
+                window.closeEditor(id);
+            });
+        };
 
-        function removeSlide(btn) {
-            const slide = btn.closest('.slide');
-            slide.style.opacity = '0';
-            slide.style.transition = 'opacity 0.3s ease';
-            setTimeout(() => { slide.remove(); }, 300);
-        }
+        window.fbRemoveSlide = function(id) {
+            if(confirm("Are you sure you want to remove this art piece permanently for everyone?")) {
+                remove(ref(db, `artworks/${id}`));
+            }
+        };
+
+        window.openLightbox = function(imgElement) {
+            const slide = imgElement.closest('.slide');
+            if (slide.classList.contains('landscape-art')) {
+                const lightbox = document.getElementById('lightbox');
+                const lightboxImg = document.getElementById('lightbox-img');
+                lightboxImg.src = imgElement.src;
+                lightbox.style.display = 'flex';
+            }
+        };
+
+        window.closeLightbox = function() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.style.display = 'none';
+            document.getElementById('lightbox-img').src = '';
+        };
 
         function escapeHTML(str) {
-            return str.replace(/[&<>'"]/g, 
-                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-            );
+            return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
         }
     </script>
 </body>
