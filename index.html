@@ -160,14 +160,14 @@
             justify-content: center;
             width: 100%;
             height: 100%;
-            padding: 40px 25px;
+            padding: 30px 25px;
         }
 
         .museum-title {
             font-family: 'Fredoka', sans-serif;
             font-size: 1.9rem;
             color: var(--text-main);
-            margin: 0 0 25px 0;
+            margin: 0 0 15px 0; /* Tight 15px buffer to photo frame */
             text-align: center;
             font-weight: 600;
             width: 100%;
@@ -178,14 +178,13 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            flex: 1;
-            margin: 0 0 25px 0;
-            min-height: 0;
+            max-height: 50vh; /* Controlled boundary sizes to balance spacing */
+            margin: 0 0 15px 0; /* Tight 15px buffer to description layout */
         }
 
         .museum-frame img {
             max-width: 100%;
-            max-height: 100%;
+            max-height: 50vh;
             width: auto;
             height: auto;
             display: block;
@@ -195,7 +194,6 @@
             object-fit: contain;
         }
 
-        /* Indicative hint that the image can be opened fullscreen */
         .museum-slide.landscape-art .museum-frame img {
             cursor: pointer;
         }
@@ -204,7 +202,7 @@
             font-size: 0.95rem;
             color: var(--text-sub);
             text-align: center;
-            margin: 0 0 35px 0;
+            margin: 0 0 15px 0; /* Tight 15px buffer to active control buttons row */
             max-width: 85%;
             line-height: 1.4;
             font-weight: 400;
@@ -243,7 +241,7 @@
             display: block;
         }
 
-        /* Buttons and Form controls */
+        /* Action Buttons & Forms */
         .action-btn {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -522,10 +520,8 @@
             reader.readAsDataURL(file);
         });
 
-        /* Lightbox Automation Utility Managers */
         function openLightbox(imgElement) {
             const slide = imgElement.closest('.slide');
-            // Only toggle full-screen rotation matrix if landscape configuration option is active
             if (slide.classList.contains('landscape-art')) {
                 lightboxImg.src = imgElement.src;
                 lightbox.style.display = 'flex';
