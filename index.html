@@ -151,7 +151,7 @@
         @keyframes arrowBounce { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(6px); opacity: 1; } }
 
         /* ---------------------------------------------------- */
-        /* View Port Modes & Center Configurations              */
+        /* Center View Port Presentation Setup                  */
         /* ---------------------------------------------------- */
         .view-container {
             display: flex;
@@ -195,6 +195,11 @@
             object-fit: contain;
         }
 
+        /* Indicative hint that the image can be opened fullscreen */
+        .museum-slide.landscape-art .museum-frame img {
+            cursor: pointer;
+        }
+
         .museum-desc {
             font-size: 0.95rem;
             color: var(--text-sub);
@@ -213,39 +218,29 @@
         }
 
         /* ---------------------------------------------------- */
-        /* Widescreen Physical Landscape Filter Overrides       */
+        /* Immersive Physical Landscape Lightbox Overlay        */
         /* ---------------------------------------------------- */
-        .museum-slide.landscape-art .view-container {
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000000;
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .fullscreen-overlay img {
             transform: rotate(90deg);
             transform-origin: center center;
             width: 100vh;
             height: 100vw;
-            position: absolute;
-            top: calc(50% - 50vw);
-            left: calc(50% - 50vh);
-            padding: 30px 40px;
-        }
-
-        .museum-slide.landscape-art .museum-title {
-            margin: 0 0 15px 0;
-        }
-
-        .museum-slide.landscape-art .museum-frame {
-            width: 100%;
-            height: 100%;
-            margin: 0 0 15px 0;
-        }
-
-        .museum-slide.landscape-art .museum-frame img {
-            max-width: 100% !important;
-            max-height: 100% !important;
-            width: auto;
-            height: auto;
-        }
-
-        .museum-slide.landscape-art .museum-desc {
-            margin: 0 0 20px 0;
-            max-width: 90%;
+            object-fit: contain;
+            display: block;
         }
 
         /* Buttons and Form controls */
@@ -395,6 +390,10 @@
         <p>Please rotate your device upright to enter Zanieke Art Gallery</p>
     </div>
 
+    <div id="lightbox" class="fullscreen-overlay" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="Fullscreen Artwork">
+    </div>
+
     <div id="gallery-container">
         
         <div class="slide welcome-slide">
@@ -437,6 +436,8 @@
         const addBtn = document.getElementById('add-btn');
         const container = document.getElementById('gallery-container');
         const addSlide = document.getElementById('add-slide');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
 
         container.addEventListener('scroll', () => {
             const maxScroll = container.scrollHeight - container.clientHeight;
@@ -473,7 +474,7 @@
                     <div class="view-container">
                         <h2 class="museum-title">${escapeHTML(title)}</h2>
                         <div class="museum-frame">
-                            <img src="${imageUrl}" class="exhibit-image" alt="Artwork">
+                            <img src="${imageUrl}" class="exhibit-image" alt="Artwork" onclick="openLightbox(this)">
                         </div>
                         <p class="museum-desc">${escapeHTML(desc || '')}</p>
                         
@@ -520,6 +521,21 @@
             };
             reader.readAsDataURL(file);
         });
+
+        /* Lightbox Automation Utility Managers */
+        function openLightbox(imgElement) {
+            const slide = imgElement.closest('.slide');
+            // Only toggle full-screen rotation matrix if landscape configuration option is active
+            if (slide.classList.contains('landscape-art')) {
+                lightboxImg.src = imgElement.src;
+                lightbox.style.display = 'flex';
+            }
+        }
+
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+            lightboxImg.src = '';
+        }
 
         function openEditor(btn) {
             const slide = btn.closest('.slide');
@@ -577,7 +593,7 @@
                 frame.style.display = 'none';
             } else if (pendingImg) {
                 if (!imgElement) {
-                    frame.innerHTML = `<img src="${pendingImg}" class="exhibit-image" alt="Artwork">`;
+                    frame.innerHTML = `<img src="${pendingImg}" class="exhibit-image" alt="Artwork" onclick="openLightbox(this)">`;
                     frame.style.display = 'flex';
                 } else {
                     imgElement.src = pendingImg;
