@@ -3,19 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zanieke's Amazing Photo Gallery</title>
+    <title>Zanieke's Portrait Art Museum</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Playfair+Display:ital,wght@0,600;1,400&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
 
     <style>
-        /* Base Reset & Pretty Variables */
         :root {
             --primary-pink: #FFB7CE;
             --dark-pink: #FF69B4;
-            --soft-white: #FFF0F5;
-            --text-color: #4A373A;
-            --grey-text: #8A7A7D;
+            --pastel-rose: #FFD1DC;
+            --soft-glow: #FFF0F5;
+            --museum-gold: #E6C280;
+            --text-main: #3D2E31;
+            --text-sub: #7A686B;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         html, body {
@@ -24,311 +31,392 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: var(--soft-white);
             font-family: 'Quicksand', sans-serif;
-            color: var(--text-color);
-            -webkit-font-smoothing: antialiased;
+            color: var(--text-main);
         }
 
-        /* Landscape Protection System */
-        #rotate-warning {
+        /* ---------------------------------------------------- */
+        /* Moving Pastel Gradient & Sparkle Background Layout   */
+        /* ---------------------------------------------------- */
+        body {
+            background: linear-gradient(-45deg, #FFB7CE, #FFD1DC, #FFE4E1, #FFF0F5);
+            background-size: 400% 400%;
+            animation: elegantGradient 16s ease infinite;
+            position: relative;
+        }
+
+        /* Ambient floating sparkle elements */
+        body::before, body::after {
+            content: "✨";
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.3;
+            animation: floatSparkle 8s infinite ease-in-out;
+            pointer-events: none;
+            z-index: 1;
+        }
+        body::before { top: 15%; left: 10%; animation-delay: 0s; }
+        body::after { bottom: 20%; right: 12%; animation-delay: 4s; }
+
+        @keyframes elegantGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatSparkle {
+            0%, 100% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0.2; }
+            50% { transform: translateY(-30px) scale(1.2) rotate(45deg); opacity: 0.6; }
+        }
+
+        /* ---------------------------------------------------- */
+        /* Portrait Mode Enforcement Wrapper                    */
+        /* ---------------------------------------------------- */
+        #landscape-warning {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: var(--primary-pink);
+            background: linear-gradient(135deg, var(--pastel-rose), var(--soft-glow));
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 99999;
             text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
+            padding: 30px;
         }
 
-        #rotate-warning .icon {
-            font-size: 4rem;
-            animation: bounce 2s infinite ease-in-out;
-            margin-bottom: 15px;
+        #landscape-warning .icon {
+            font-size: 4.5rem;
+            animation: spinDevice 2.5s infinite ease-in-out;
         }
 
-        #rotate-warning h2 {
+        #landscape-warning h2 {
             font-family: 'Fredoka', sans-serif;
-            color: white;
-            font-size: 2rem;
-            margin: 0 0 10px 0;
-            text-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+            color: var(--dark-pink);
+            font-size: 2.2rem;
+            margin: 15px 0 10px 0;
         }
 
-        #rotate-warning p {
-            color: var(--text-color);
+        #landscape-warning p {
             font-size: 1.1rem;
             font-weight: bold;
-        }
-
-        /* Show warning on Portrait, show gallery on Landscape */
-        @media (orientation: portrait) {
-            #rotate-warning { display: flex; }
-            #gallery-container { display: none; }
+            color: var(--text-sub);
         }
 
         @media (orientation: landscape) {
-            #rotate-warning { display: none; }
+            #landscape-warning { display: flex; }
+            #gallery-container { display: none; }
+        }
+
+        @media (orientation: portrait) {
+            #landscape-warning { display: none; }
             #gallery-container { display: block; }
         }
 
-        /* Smooth Vertical Snap Container */
+        @keyframes spinDevice {
+            0%, 100% { transform: rotate(90deg); }
+            50% { transform: rotate(0deg); }
+        }
+
+        /* ---------------------------------------------------- */
+        /* Snap-Scroll Gallery Container                        */
+        /* ---------------------------------------------------- */
         #gallery-container {
             width: 100vw;
             height: 100vh;
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
             scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch; /* Butter-smooth swipe on iOS */
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            z-index: 2;
         }
 
-        /* Universal Slide Styling */
         .slide {
             width: 100vw;
             height: 100vh;
             scroll-snap-align: start;
             flex-shrink: 0;
-            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 25px;
             position: relative;
         }
 
-        /* Slide 1: Welcome Screen */
+        /* ---------------------------------------------------- */
+        /* Slide 1: Fine Art Welcome Page                       */
+        /* ---------------------------------------------------- */
         .welcome-slide {
-            background: var(--primary-pink);
-            display: flex;
-            flex-direction: column;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
+            gap: 15px;
+        }
+
+        .welcome-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid white;
+            padding: 40px 25px;
+            border-radius: 40px;
+            box-shadow: 0 20px 40px rgba(255, 105, 180, 0.15);
             text-align: center;
+            width: 100%;
+            max-width: 340px;
+            animation: cardFloat 4s infinite ease-in-out;
         }
 
         .welcome-top {
-            font-size: 1.4rem;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.1rem;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            color: white;
-            margin-bottom: 5px;
+            letter-spacing: 4px;
+            color: var(--dark-pink);
+            margin: 0 0 10px 0;
             font-weight: 700;
         }
 
         .welcome-title {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 3.2rem;
-            color: white;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.6rem;
+            color: var(--text-main);
             margin: 0 0 20px 0;
-            text-shadow: 3px 3px 0px var(--dark-pink);
             line-height: 1.2;
+            font-weight: 600;
         }
 
         .welcome-sub {
-            font-size: 1.1rem;
-            color: var(--grey-text);
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-sub);
             font-style: italic;
-            background: rgba(255, 255, 255, 0.6);
-            padding: 8px 20px;
-            border-radius: 20px;
+            border-top: 1px dashed var(--primary-pink);
+            padding-top: 15px;
+            margin: 0;
         }
 
-        .scroll-hint {
+        .scroll-indicator {
             position: absolute;
-            bottom: 25px;
-            font-size: 1rem;
+            bottom: 30px;
+            font-size: 0.9rem;
             font-weight: bold;
-            color: white;
-            animation: float 2s infinite ease-in-out;
+            color: var(--dark-pink);
+            letter-spacing: 1px;
+            animation: arrowBounce 2s infinite;
         }
 
-        /* Slide 2+: Dynamic Image Presenter Slide Layout */
-        .image-slide {
-            background: #FFF5F7;
-            display: grid;
-            grid-template-rows: auto 1fr auto;
-            justify-items: center;
-            align-items: center;
-            padding: 15px 30px;
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        .slide-title {
+        @keyframes arrowBounce {
+            0%, 100% { transform: translateY(0); opacity: 0.6; }
+            50% { transform: translateY(6px); opacity: 1; }
+        }
+
+        /* ---------------------------------------------------- */
+        /* Dynamic Exhibition Slides (Museum Layout)            */
+        /* ---------------------------------------------------- */
+        .museum-slide {
+            background: transparent;
+        }
+
+        .museum-header {
+            width: 100%;
+            text-align: center;
+        }
+
+        .museum-title {
             font-family: 'Fredoka', sans-serif;
             font-size: 1.8rem;
-            color: var(--dark-pink);
+            color: white;
             margin: 0;
-            text-align: center;
-            text-shadow: 1px 1px 0px white;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.4);
+            letter-spacing: 0.5px;
         }
 
-        .slide-img-container {
+        /* The Premium Museum Picture Frame */
+        .museum-frame {
             width: 100%;
-            height: 100%;
+            flex: 1;
+            margin: 20px 0;
             display: flex;
             justify-content: center;
             align-items: center;
+            background: white;
+            padding: 16px;
+            border-radius: 24px;
+            box-shadow: 0 16px 35px rgba(0, 0, 0, 0.12);
+            border: 8px solid var(--museum-gold);
+            position: relative;
             overflow: hidden;
         }
 
-        .slide-img-container img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain; /* Retains perfect image aspect ratio */
-            border-radius: 20px;
-            border: 6px solid white;
-            box-shadow: 0 8px 24px rgba(255, 105, 180, 0.15);
+        .museum-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Perfect preservation of image aspect ratio */
+            border-radius: 8px;
         }
 
-        .slide-desc {
-            font-size: 1.1rem;
-            color: var(--text-color);
-            margin: 5px 0 0 0;
-            text-align: center;
-            max-width: 75%;
+        /* Classic Wall Museum Placard Label */
+        .museum-placard {
+            background: rgba(255, 255, 255, 0.9);
+            border-left: 4px solid var(--dark-pink);
+            padding: 12px 20px;
+            border-radius: 4px 16px 16px 4px;
+            width: 90%;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            text-align: left;
+        }
+
+        .museum-desc {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            color: var(--text-main);
+            margin: 0;
+            line-height: 1.4;
             font-weight: 500;
-            background: rgba(255, 255, 255, 0.5);
-            padding: 4px 15px;
-            border-radius: 12px;
         }
 
-        /* Persistent Add Picture Creator Slide Layout */
+        /* ---------------------------------------------------- */
+        /* Persistent Art Creator Slide Layout                  */
+        /* ---------------------------------------------------- */
         .add-slide {
-            background: var(--soft-white);
-            display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
         }
 
-        .cute-card {
-            background: white;
-            padding: 25px 35px;
-            border-radius: 32px;
-            box-shadow: 0 12px 30px rgba(255, 182, 193, 0.35);
-            width: 85%;
-            max-width: 550px;
+        .curator-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 30px 24px;
+            border-radius: 36px;
+            box-shadow: 0 20px 45px rgba(255, 182, 193, 0.4);
+            width: 100%;
+            max-width: 340px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
             align-items: center;
             border: 3px dashed var(--primary-pink);
         }
 
-        .cute-card h2 {
+        .curator-card h2 {
             color: var(--dark-pink);
             margin: 0 0 5px 0;
             font-family: 'Fredoka', sans-serif;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
+            text-align: center;
         }
 
         input[type="file"] {
             display: none;
         }
 
-        .file-label {
-            display: inline-block;
-            padding: 10px 24px;
-            cursor: pointer;
-            background: var(--primary-pink);
-            color: white;
-            border-radius: 20px;
-            font-weight: bold;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(255, 182, 193, 0.4);
-            font-size: 0.95rem;
-        }
-
-        .file-label:active {
-            transform: scale(0.95);
-        }
-
-        .input-field {
+        .file-trigger {
+            display: block;
             width: 100%;
-            padding: 10px 16px;
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            background: white;
+            color: var(--dark-pink);
+            border: 2px solid var(--primary-pink);
+            border-radius: 18px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 10px rgba(255, 182, 193, 0.2);
+        }
+
+        .file-trigger:active {
+            transform: scale(0.98);
+            background: var(--soft-glow);
+        }
+
+        .museum-input {
+            width: 100%;
+            padding: 12px 16px;
             border: 2px solid #FFE4E1;
             border-radius: 16px;
             font-family: 'Quicksand', sans-serif;
             font-size: 0.95rem;
             outline: none;
-            box-sizing: border-box;
+            background: white;
+            color: var(--text-main);
             transition: border-color 0.3s;
         }
 
-        .input-field:focus {
+        .museum-input:focus {
             border-color: var(--dark-pink);
         }
 
-        textarea.input-field {
+        textarea.museum-input {
             resize: none;
         }
 
-        .submit-btn {
-            background: var(--dark-pink);
+        .hang-btn {
+            background: linear-gradient(135deg, var(--dark-pink), #FF85A2);
             color: white;
             border: none;
-            padding: 12px 0;
-            border-radius: 25px;
+            padding: 14px 0;
+            border-radius: 20px;
             font-size: 1.1rem;
             font-family: 'Fredoka', sans-serif;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 6px 16px rgba(255, 105, 180, 0.3);
-            transition: all 0.2s ease;
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
+            transition: all 0.2s;
             width: 100%;
             margin-top: 5px;
+            letter-spacing: 0.5px;
         }
 
-        .submit-btn:active {
+        .hang-btn:active {
             transform: translateY(2px);
-        }
-
-        /* Cute Custom Keyframe Animations */
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(10deg); }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); opacity: 0.7; }
-            50% { transform: translateY(-8px); opacity: 1; }
+            box-shadow: 0 3px 10px rgba(255, 105, 180, 0.2);
         }
     </style>
 </head>
 <body>
 
-    <div id="rotate-warning">
-        <div class="icon">🔄✨</div>
-        <h2>Rotate Your Device!</h2>
-        <p>Please turn your screen to Landscape Mode to explore Zanieke's masterpieces!</p>
+    <div id="landscape-warning">
+        <div class="icon">📱✨</div>
+        <h2>Portrait Mode Only</h2>
+        <p>Please rotate your device upright to enter Zanieke's Art Gallery!</p>
     </div>
 
     <div id="gallery-container">
         
         <div class="slide welcome-slide">
-            <p class="welcome-top">Welcome to</p>
-            <h1 class="welcome-title">Zanieke's Amazing Photo Gallery</h1>
-            <p class="welcome-sub">It's so amazing she's so talanted.</p>
-            <div class="scroll-hint">Swipe Up to Begin 💖</div>
+            <div class="welcome-card">
+                <p class="welcome-top">Welcome to</p>
+                <h1 class="welcome-title">Zanieke's Amazing Photo Gallery</h1>
+                <p class="welcome-sub">It's so amazing she's so talanted.</p>
+            </div>
+            <div class="scroll-indicator">Swipe Up to Tour 🎀</div>
         </div>
 
         <div id="add-slide" class="slide add-slide">
-            <div class="cute-card">
-                <h2>Add a New Masterpiece ✨</h2>
+            <div class="curator-card">
+                <h2>Exhibit a Masterpiece 🎨</h2>
                 
-                <label id="file-label" for="file-input" class="file-label">
-                    Choose a Photo 📸
+                <label id="file-label" for="file-input" class="file-trigger">
+                    Select Art Photo 📸
                 </label>
                 <input type="file" id="file-input" accept="image/*">
                 
-                <input type="text" id="title-input" class="input-field" placeholder="Give it a cute title..." autocomplete="off">
+                <input type="text" id="title-input" class="museum-input" placeholder="Name of your masterpiece..." autocomplete="off">
                 
-                <textarea id="desc-input" class="input-field" placeholder="Write an adorable description..." rows="2"></textarea>
+                <textarea id="desc-input" class="museum-input" placeholder="Describe the artistic vision..." rows="2"></textarea>
                 
-                <button id="add-btn" class="submit-btn">Drop it in! ✨</button>
+                <button id="add-btn" class="hang-btn">Hang in Gallery ✨</button>
             </div>
         </div>
 
@@ -343,26 +431,27 @@
         const container = document.getElementById('gallery-container');
         const addSlide = document.getElementById('add-slide');
 
-        // Dynamic File Handler Label Change
+        // Dynamic State UI updates for files
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
-                fileLabel.textContent = "Selected! 💖";
-                fileLabel.style.background = "#FF69B4";
+                fileLabel.textContent = "Photo Ready! 💖";
+                fileLabel.style.background = "var(--soft-glow)";
+                fileLabel.style.borderColor = "var(--dark-pink)";
             }
         });
 
-        // Pipeline to insert picture card and safely float the setup screen lower down
+        // Safe frame parsing & generation pipeline
         addBtn.addEventListener('click', () => {
             const file = fileInput.files[0];
             const title = titleInput.value.trim();
             const desc = descInput.value.trim();
             
             if (!file) {
-                alert('Oops! Please pick an adorable photo first! 📸');
+                alert('Please pick a stunning photograph to exhibit! 📸');
                 return;
             }
             if (!title) {
-                alert('Please give your beautiful photo a title! ✨');
+                alert('Every great masterpiece needs a title! 🏷️');
                 return;
             }
             
@@ -370,34 +459,39 @@
             reader.onload = function(e) {
                 const imageUrl = e.target.result;
                 
-                // Build layout system programmatically
+                // Construct Portrait Exhibition Elements
                 const newSlide = document.createElement('div');
-                newSlide.className = 'slide image-slide';
+                newSlide.className = 'slide museum-slide';
                 newSlide.innerHTML = `
-                    <h2 class="slide-title">${escapeHTML(title)}</h2>
-                    <div class="slide-img-container">
+                    <div class="museum-header">
+                        <h2 class="museum-title">${escapeHTML(title)}</h2>
+                    </div>
+                    <div class="museum-frame">
                         <img src="${imageUrl}" alt="${escapeHTML(title)}">
                     </div>
-                    <p class="slide-desc">${escapeHTML(desc)}</p>
+                    <div class="museum-placard">
+                        <p class="museum-desc">${escapeHTML(desc || 'Untitled Selection.')}</p>
+                    </div>
                 `;
                 
-                // Push structural container element directly above the operational UI layout
+                // Track & slide above the creation card node setup safely
                 container.insertBefore(newSlide, addSlide);
                 
-                // Clean configuration settings back to baseline standard layout
+                // Reset inputs cleanly
                 fileInput.value = '';
                 titleInput.value = '';
                 descInput.value = '';
-                fileLabel.textContent = "Choose a Photo 📸";
-                fileLabel.style.background = "var(--primary-pink)";
+                fileLabel.textContent = "Select Art Photo 📸";
+                fileLabel.style.background = "white";
+                fileLabel.style.borderColor = "var(--primary-pink)";
                 
-                // Perform automated horizontal target alignment drop scroll tracking smoothly
+                // Jump perspective focus viewport seamlessly down to target asset immediately
                 newSlide.scrollIntoView({ behavior: 'smooth' });
             };
             reader.readAsDataURL(file);
         });
 
-        // Secure clean encoding function to make text parsing completely bulletproof
+        // XSS sanitization helper injection routine
         function escapeHTML(str) {
             return str.replace(/[&<>'"]/g, 
                 tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
